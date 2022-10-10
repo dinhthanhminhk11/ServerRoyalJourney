@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { loginUser, loginHost, loginAdmin } from '../controller/user/signin'
-import { createHost, createUser } from '../controller/user/signup'
+import { loginUser, loginHost, loginAdmin } from '../controller/user/signIn'
+import { createHost, createUser } from '../controller/user/signUp'
 const router = Router()
 router.route('/signup').post(createUser)
 router.route('/signin').post(loginUser)
