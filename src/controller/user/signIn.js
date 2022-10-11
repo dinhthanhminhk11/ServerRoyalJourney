@@ -25,6 +25,7 @@ export const loginUser = async (req, res) => {
         phone: checkEmail.phone,
         address: checkEmail.address,
       }
+      
     })
   } catch (error) {
     res.status(401).json({

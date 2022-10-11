@@ -5,11 +5,15 @@ export const createUser = async (req, res) => {
   try {
     const checkEmail = await user.findOne({ email: req.body.email })
     if (checkEmail) {
-      return res.status(400).json('email da ton tai!')
+      return res.status(400).json({
+        status: "false",
+        message: 'Email đã tồn tại',
+        email: checkEmail.email,
+      })
     }
     const passHass = bcyrpt.hashSync(req.body.password, 10)
     const dataUser = {
-      name: '',
+      name: req.body.name   ,
       phone: '',
       email: req.body.email,
       password: passHass,
@@ -20,7 +24,8 @@ export const createUser = async (req, res) => {
     const resault = await new user(dataUser).save()
     if (resault)
       res.status(200).json({
-        messege: 'true',
+        status: "true",
+        message: 'Đăng kí thành công',
         email: dataUser.email,
       })
   } catch (error) {
