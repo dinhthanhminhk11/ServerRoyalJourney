@@ -1,5 +1,5 @@
 import product from '../../models/product'
-export const nearByUserLoca = async (req, res) => {
+export const nearByUserLocation = async (req, res) => {
   try {
     const data = await product.aggregate([
       {
