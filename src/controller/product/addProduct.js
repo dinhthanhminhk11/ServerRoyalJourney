@@ -18,6 +18,11 @@ export const addProduct = async (req, res) => {
       opening: req.body.opening,
       ending: req.body.ending,
       user: req.body.user,
+      legal: req.body.legal,
+      content: req.body.content,
+      yte: req.body.yte,
+      bathrooms: req.body.bathroom,
+      limitPerson: req.body.limitPerson,
       sleepingPlaces: req.body.sleepingPlaces,
     }
     const data = await product(dataSave).save()
