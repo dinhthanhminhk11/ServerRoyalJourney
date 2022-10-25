@@ -39,7 +39,10 @@ export const loginHost = async (req, res) => {
     if (!checkEmail) return res.status(404).json('tài khoản chưa đăng ký!')
     const checkPass = bcyrpt.compareSync(req.body.password, checkEmail.password)
     if (!checkPass) return res.status(400).json('sai mật khẩu!')
+    if (checkEmail.role != 1)
+      return res.status(404).json('bạn ko có quyền đăng nhập hệ thống!')
     res.status(200).json({
+      id: checkEmail._id,
       messege: 'true',
       name: checkEmail.name,
       image: checkEmail.image,
