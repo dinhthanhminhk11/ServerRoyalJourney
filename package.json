@@ -4,7 +4,7 @@
   "description": "",
   "main": "./src/main.js",
   "scripts": {
-    "start": "node ./src/main.js -p 8080"
+    "start": "nodemon ./src/main.js -p 8080"
   },
   "author": "",
   "license": "ISC",
