@@ -1,4 +1,4 @@
-import bathroom from '../../models/bathroom'
+import bathroom from '../../models/BathRoom'
 export const getBathRoom = async (req, res) => {
   try {
     const data = await bathroom.find()
