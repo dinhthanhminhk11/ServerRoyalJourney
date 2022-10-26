@@ -7,7 +7,7 @@ import User from './router/routeruser'
 import sleepingPlaces from './router/routerSleeping'
 import Suplements from './router/routerSuplement'
 import Product from './router/routerProduct'
-import bathRoom from './router/routerbathroom'
+import bathRoom from './router/routerbathroom.js'
 const app = express()
 
 app.use(express.json())
