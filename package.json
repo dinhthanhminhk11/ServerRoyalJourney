@@ -4,7 +4,7 @@
   "description": "",
   "main": "./src/main.js",
   "scripts": {
-    "server": "nodemon ./src/main.js --exec babel-node -e js"
+    "start": "nodemon ./src/main.js --exec babel-node -e js"
   },
   "author": "",
   "license": "ISC",
