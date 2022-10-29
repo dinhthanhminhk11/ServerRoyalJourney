@@ -1,4 +1,5 @@
 import category from "../../models/category";
+import products from "./../../models/product"
 
 export const getCategory = async (req,res)=>{
     try {
@@ -19,6 +20,18 @@ export const findCategory = async (req,res)=>{
             data,
             product
         })
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
+
+
+export const getNameCatogory = async (req,res)=>{
+    try {
+        const data = await category.findById({_id: req.params.id})
+        res.status(200).json(data.name)
     } catch (error) {
         res.status(400).json({
             error

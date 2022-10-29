@@ -8,6 +8,6 @@ router.route('/signin').post(loginUser)
 router.route('/host/signup').post(createHost)
 router.route('/host/signin').post(loginHost)
 router.route('/admin/signin').post(loginAdmin)
-router.route('/nearmylocation').get(nearByUserLocation)
-router.route('/nearByUserLocationAllCategory').get(nearByUserLocationAllCategory)
+router.route('/nearmylocation').post(nearByUserLocation)
+router.route('/nearByUserLocationAllCategory').post(nearByUserLocationAllCategory)
 export default router
