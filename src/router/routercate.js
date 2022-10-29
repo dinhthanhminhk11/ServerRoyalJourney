@@ -11,5 +11,5 @@ router.post('/addCategory',addCategory)
 router.delete('/deleteCategory/:id',deleteCategory)
 router.put('/updateCategory/:id',updateCategory)
 router.get('/getNameCategory/:id',getNameCatogory)
-router.post('/listCategory/:id',findCategory)
+router.get('/listCategory/:id',findCategory)
 export default router

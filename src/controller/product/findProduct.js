@@ -4,10 +4,12 @@ export const getProduct = async (req, res) => {
   const filter = { _id: req.params.id }
   try {
     const data = await product
-      .find(filter)
+      .findById(filter)
       .populate('user')
       .populate({ path: 'category', model: 'Category', select: 'name' })
-    res.json(data)
+    res.status(200).json(
+      data
+      )
   } catch (error) {
     res.status(400).json({
       // error
