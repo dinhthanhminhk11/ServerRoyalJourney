@@ -8,6 +8,7 @@ import sleepingPlaces from './router/routerSleeping'
 import Suplements from './router/routerSuplement'
 import Product from './router/routerProduct'
 import bathRoom from './router/routerbathroom.js'
+import message from './router/routerMessage'
 const app = express()
 
 app.use(express.json())
@@ -30,6 +31,7 @@ app.use('/api', sleepingPlaces)
 app.use('/api', Suplements)
 app.use('/api', Product)
 app.use('/api', bathRoom)
+app.use('/api',message)
 app.listen(process.env.PORT, () => {
   console.log(`connected port ${process.env.PORT}`)
 })
