@@ -1,4 +1,5 @@
 import Message from "../../models/Message"
+import user from "../../models/user";
 
 export const addMessage = async (req,res) => {
     try {
@@ -32,4 +33,25 @@ export const findMessage = async (req,res)=>{
             error
         })
     }
+}
+
+
+export const findUser = async (req,res)=>{
+    try {
+        const data = await user.find()
+        res.json({
+            data
+        })
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
+
+export const statusMessage = (req,res)=>{
+    req.body.forEach(async(element) => {
+        await Message.findOneAndUpdate({_id:`${element._id}`},{$set:{status:true}},{new:true})
+    });
+    res.json(req.body)
 }

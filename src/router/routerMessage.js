@@ -1,10 +1,12 @@
 import {Router} from 'express'
-import { addMessage, findMessage } from '../controller/message/messageDao'
+import { addMessage, findMessage, findUser, statusMessage } from '../controller/message/messageDao'
 
 
 const router = Router()
 
-router.post("/addMessage/",addMessage)
-router.get("/getMassage",findMessage)
+router.post("/addmsg/",addMessage)
+router.get("/getmsg/",findMessage)
+router.get("/getUser/",findUser)
+router.post("/statusMessage",statusMessage)
 
 export default router
