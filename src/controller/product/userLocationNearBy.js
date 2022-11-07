@@ -72,3 +72,8 @@ export const nearByUserLocationAllCategory = async (req, res) => {
     })
   }
 }
+
+export const moderatorBoard = (req, res) => {
+  res.status(200).send("User Content.");
+};
+

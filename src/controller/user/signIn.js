@@ -1,8 +1,12 @@
 import user from '../../models/user'
 const bcyrpt = require('bcrypt')
+const config = require("../config/auth.config")
+
+var jwt = require("jsonwebtoken");
 export const loginUser = async (req, res) => {
   try {
     const checkEmail = await user.findOne({ email: req.body.email })
+   
     if (!checkEmail) return res.status(404).json(
       {
         status: 'false',
@@ -14,6 +18,12 @@ export const loginUser = async (req, res) => {
       status: 'false',
       message: "Tài khoản hoặc mật khẩu không chính xác",
     })
+
+    var token = jwt.sign({ id: checkEmail.id }, config.secret, {
+      expiresIn: 86400 // 24 hours
+    });
+
+
     res.status(200).json({
       status: 'true',
       message: "Đăng nhập thành công",
@@ -24,7 +34,8 @@ export const loginUser = async (req, res) => {
         image: checkEmail.image,
         phone: checkEmail.phone,
         address: checkEmail.address,
-      }
+      },
+      "accessToken" : token, 
       
     })
   } catch (error) {
@@ -72,3 +83,35 @@ export const loginAdmin = async (req, res) => {
     })
   }
 }
+
+export const isModerator = async (req, res, next) => {
+  const checkEmail = await user.findById(req.userId)
+  res.status(200).json({
+    status: 'true',
+    message: "Đăng nhập thành công",
+    data: {
+      id: checkEmail.id,
+      name: checkEmail.name,
+      email: checkEmail.email,
+      image: checkEmail.image,
+      phone: checkEmail.phone,
+      address: checkEmail.address,
+    }
+  })
+}
+
+export const verifyToken = (req, res, next) => {
+  let token = req.headers["x-access-token"];
+
+  if (!token) {
+    return res.status(403).send({ message: "No token provided!" });
+  }
+
+  jwt.verify(token, config.secret, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    }
+    req.userId = decoded.id;
+    next();
+  });
+};
