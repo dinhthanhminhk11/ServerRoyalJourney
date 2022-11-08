@@ -28,5 +28,13 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  otp: {
+    type: String,
+    required: true,
+  },
+  active: {
+    type: Boolean,
+    default: false,
+  },
 })
 export default mongoose.model('user', userSchema)

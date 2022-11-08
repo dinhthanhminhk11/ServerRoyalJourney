@@ -1,9 +1,12 @@
 import user from '../../models/user'
 const bcyrpt = require('bcrypt')
+const { generateOTP } = require('../../services/OTP');
+const { sendMail } = require('../../services/MAIL');
 export const createUser = async (req, res) => {
   console.log(req.body)
+  const otpGenerated = generateOTP();
   try {
-    const checkEmail = await user.findOne({ email: req.body.email })
+    const checkEmail = await user.findOne({ email: req.body.email , role: 0 })
     if (checkEmail) {
       return res.status(400).json({
         status: "false",
@@ -20,8 +23,14 @@ export const createUser = async (req, res) => {
       address: '',
       image: '',
       idcard: '',
+      "otp": otpGenerated,
+      "active" : false
     }
     const resault = await new user(dataUser).save()
+    await sendMail({
+      to: req.body.email,
+      OTP: otpGenerated,
+    });
     if (resault)
       res.status(200).json({
         status: "true",
@@ -65,3 +74,25 @@ export const createHost = async (req, res) => {
     })
   }
 }
+
+export const verifyEmail = async (req, res) => {
+  const { email, otp } = req.body;
+  const user = await validateUserSignUp(email, otp);
+  res.send(user);
+};
+
+const validateUserSignUp = async (email, otp) => {
+  const userData = await user.findOne({
+    email,
+  });
+  if (!userData) {
+    return [false, 'User not found'];
+  }
+  if (userData && userData.otp !== otp) {
+    return [false, 'Invalid OTP'];
+  }
+  const updatedUser = await user.findByIdAndUpdate(userData._id, {
+    $set: { active: true },
+  });
+  return [true, updatedUser];
+};

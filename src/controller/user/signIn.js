@@ -5,7 +5,7 @@ const config = require("../config/auth.config")
 var jwt = require("jsonwebtoken");
 export const loginUser = async (req, res) => {
   try {
-    const checkEmail = await user.findOne({ email: req.body.email })
+    const checkEmail = await user.findOne({ email: req.body.email, role: 0 })
    
     if (!checkEmail) return res.status(404).json(
       {
@@ -96,7 +96,8 @@ export const isModerator = async (req, res, next) => {
       image: checkEmail.image,
       phone: checkEmail.phone,
       address: checkEmail.address,
-    }
+    },
+    "accessToken" : "token", 
   })
 }
 
