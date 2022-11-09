@@ -86,13 +86,33 @@ const validateUserSignUp = async (email, otp) => {
     email,
   });
   if (!userData) {
-    return [false, 'User not found'];
+    return {"status" : false , "message" : "Email không tồn tại"};
   }
   if (userData && userData.otp !== otp) {
-    return [false, 'Invalid OTP'];
+    return {"status" : false , "message" : "OTP không chính xác"};
   }
   const updatedUser = await user.findByIdAndUpdate(userData._id, {
     $set: { active: true },
   });
-  return [true, updatedUser];
+  return {"status" : true , "message" : "Đã xác nhận email" , "data": updatedUser};
 };
+
+export const sendAgain = async (req, res) => {
+  try {
+    const checkEmail = await user.findOne({ email: req.body.email , role: 0 })
+    await sendMail({
+      to: req.body.email,
+      OTP: checkEmail.otp,
+    });
+
+    res.status(200).json({
+      status: true,
+      message: 'Đã gửi tới'
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      message: 'Mail chưa được đăng kí',
+    })
+  }
+}
