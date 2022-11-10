@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { loginUser, loginHost, loginAdmin , isModerator  , verifyToken} from '../controller/user/signIn'
-import { createHost, createUser , verifyEmail , sendAgain } from '../controller/user/signUp'
+import { createHost, createUser , verifyEmail , sendAgain , checkEmailForgot , validateUserPass , newPass} from '../controller/user/signUp'
 import { nearByUserLocation,nearByUserLocationAllCategory , moderatorBoard  } from '../controller/product/userLocationNearBy'
 const router = Router()
 router.route('/signup').post(createUser)
@@ -13,4 +13,8 @@ router.route('/nearByUserLocationAllCategory').post(nearByUserLocationAllCategor
 router.route('/getUserByToken').get([verifyToken, isModerator],moderatorBoard)
 router.route('/signup/verify').post(verifyEmail)
 router.route('/signup/verify/sendAgain').post(sendAgain)
+
+router.route('/checkEmailForgot').post(checkEmailForgot)
+router.route('/validateUserPass').post(validateUserPass)
+router.route('/newPass').post(newPass)
 export default router

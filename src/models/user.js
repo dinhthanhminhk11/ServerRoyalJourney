@@ -36,5 +36,9 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  otpResetPass: {
+    type: String,
+    required: true,
+  } 
 })
 export default mongoose.model('user', userSchema)

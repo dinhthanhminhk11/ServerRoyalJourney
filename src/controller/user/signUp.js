@@ -1,7 +1,8 @@
 import user from '../../models/user'
 const bcyrpt = require('bcrypt')
 const { generateOTP } = require('../../services/OTP');
-const { sendMail } = require('../../services/MAIL');
+const { sendMail, sendMailForgotPass } = require('../../services/MAIL');
+const otpGenerator = require('otp-generator')
 export const createUser = async (req, res) => {
   console.log(req.body)
   const otpGenerated = generateOTP();
@@ -24,7 +25,8 @@ export const createUser = async (req, res) => {
       image: '',
       idcard: '',
       "otp": otpGenerated,
-      "active" : false
+      "active" : false,
+      otpResetPass: otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false })
     }
     const resault = await new user(dataUser).save()
     await sendMail({
@@ -116,3 +118,69 @@ export const sendAgain = async (req, res) => {
     })
   }
 }
+
+
+export const checkEmailForgot = async (req , res) =>{
+  try {
+    const checkEmail = await user.findOne({ email: req.body.email , role: 0 })
+    if (!checkEmail) {
+     return res.status(200).json({status : false , message : "Email không tồn tại"})
+    }
+    await sendMailForgotPass({
+      to: req.body.email,
+      OTP: checkEmail.otpResetPass,
+    });
+
+    return  res.status(200).json({
+      status: true,
+      message: 'Đã gửi tới'
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      message: 'Mail chưa được đăng kí',
+    })
+  }
+}
+
+
+export const validateUserPass = async (req , res ) => {
+  try {
+    const userData = await user.findOne({
+      email: req.body.email 
+    });
+    if (!userData) {
+      return res.status(200).json({status: false , message : "Email không tồn tại"})
+    }
+    if (userData && userData.otpResetPass !== req.body.otp) {
+      return res.status(200).json({status: false , message : "OTP không chính xác"})
+    }
+    return res.status(200).json({status : true , message : "OTP chính xác"})
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      message: 'Mail chưa được đăng kí',
+    })
+  }
+};
+
+export const newPass = async (req , res ) => {
+  try {
+    const userData = await user.findOne({
+      email: req.body.email 
+    });
+    if (!userData) {
+      return res.status(200).json({status : false , message : "Email không tồn tại"});
+    }
+    const passHass = bcyrpt.hashSync(req.body.password, 10)
+    const updatedUser = await user.findByIdAndUpdate(userData._id, {
+      $set: { password: passHass },
+    });
+    return res.status(200).json({status : true , message : "Mật khẩu đã được thay đổi"});
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      message: 'Mail chưa được đăng kí',
+    })
+  }
+};
