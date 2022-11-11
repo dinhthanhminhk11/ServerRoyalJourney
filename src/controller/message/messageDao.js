@@ -22,8 +22,23 @@ export const addMessage = async (req,res) => {
     }
 };
 
+export const findMessageUser = async (req,res)=>{
+    try {
+        const data = await Message.find({"send":{$in:[req.params.send,req.params.sendTo]}, "sendTo": {$in:[req.params.send,req.params.sendTo]}})
+        res.json({
+            data
+        })
+        console.log(req.params.id)
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
+
 export const findMessage = async (req,res)=>{
     try {
+        // const data = await Message.find({"sendTo": req.params.id})
         const data = await Message.find()
         res.json({
             data
