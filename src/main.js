@@ -78,6 +78,9 @@ io.on("connection",socket=> {
   })
   socket.on('join', (id) => {
     activeUser.set(id, socket.id)
+    io.emit('join', {
+      id: id
+    })
     console.log("user:   "+id)
   })
   socket.on('message', (data) => {
@@ -124,6 +127,7 @@ io.on("connection",socket=> {
         activeUser.delete(item[0])
       }
     }
+    console.log("da out")
   })
 })
 
