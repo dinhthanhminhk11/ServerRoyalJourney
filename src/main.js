@@ -10,6 +10,7 @@ import Product from './router/routerProduct'
 import bathRoom from './router/routerbathroom.js'
 import message from './router/routerMessage'
 import Order from './router/routerorder'
+import bookmark from './router/routerBookmark'
 import socket from 'socket.io'
 const app = express()
 app.use(express.json())
@@ -34,6 +35,7 @@ app.use('/api', Product)
 app.use('/api', bathRoom)
 app.use('/api/Message',message)
 app.use('/api', Order)
+app.use('/api', bookmark)
 const server =  app.listen(process.env.PORT, () => {
   console.log(`connected port ${process.env.PORT}`)
 })
