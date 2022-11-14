@@ -1,4 +1,5 @@
 import user from '../../models/user'
+import order from '../../models/order'
 import product from '../../models/product'
 export const createOrder = async (req, res) => {
   try {
@@ -11,6 +12,10 @@ export const createOrder = async (req, res) => {
       price: req.body.price,
       cashMoney: req.body.cashMoney,
       banking: req.body.banking,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      person: req.body.person,
+      phone: req.body.phone
     }
     const saveOrder = await new order(dataOrder).save()
     const date = new Date(saveOrder.createdAt)
@@ -33,6 +38,10 @@ export const createOrder = async (req, res) => {
       payDay: saveOrder.payDay,
       cashMoney: saveOrder.cashMoney,
       banking: saveOrder.banking,
+      startDate: saveOrder.startDate,
+      endDate: saveOrder.endDate,
+      person: saveOrder.person,
+      phone: saveOrder.phone,
       status: 'Đang chờ xác nhận',
       date: `${
         date.getDay() == 0 ? 'Chủ Nhật' : 'Thứ ' + date.getDay() + 1
@@ -63,8 +72,13 @@ export const ListOrder = async (req, res) => {
         cashMoney: item.cashMoney,
         banking: item.banking,
         seem: item.seem,
+        startDate: item.startDate,
+      endDate: item.endDate,
+      person: item.person,
+      phone: item.phone,
         status: item.status,
         time: item.createdAt,
+        
       }
       const pro = await product.findById({ _id: item.IdPro })
       const userName = await user.findById({ _id: item.IdUser })
@@ -105,6 +119,24 @@ export const updateStatus = async (req, res) => {
     })
   }
 }
+export const updateStatusDone = async (req, res) => {
+  try {
+    const dataUpdate = await order.findOneAndUpdate(
+      { IdOder: req.body.id },
+      { status: 'done' },
+      { new: true }
+    )
+    console.log(dataUpdate)
+    res.status(200).json({
+      messege: true,
+      data: dataUpdate,
+    })
+  } catch (error) {
+    res.status(401).json({
+      messege: false,
+    })
+  }
+}
 export const orderNotSeem = async (req, res) => {
   try {
     const listOrderNotSeem = await order.find({ IdHost: req.body.id })
@@ -112,6 +144,76 @@ export const orderNotSeem = async (req, res) => {
       messege: true,
       data: listOrderNotSeem.filter((item) => item.seem == false),
     })
+  } catch (error) {
+    res.status(401).json({
+      messege: false,
+    })
+  }
+}
+
+export const orderNotices = async (req, res) => {
+  try {
+    const inforUser = await user
+      .findById({ _id: req.body.idUser })
+      .select(['-password', '-role', '-idcard', '-phone', '-_id'])
+    const listOrderNotSeem = await order
+      .find({ IdUser: req.body.idUser })
+      .populate({ path: 'IdPro', model: 'Product', select: ['name', 'images'] })
+      .populate({ path: 'IdHost', model: 'user', select: 'name' })
+      .select(['-seem', '-_id', '-updatedAt', '-IdUser'])
+    res.status(200).json({
+      messege: true,
+      data: listOrderNotSeem,
+      userInfor: inforUser,
+    })
+  } catch (error) {
+    res.status(401).json({
+      messege: error,
+    })
+  }
+}
+
+
+export const listOrderByIdUser = async (req, res) => {
+  try {
+    const dataCompile = []
+    const data = await order.find({ IdUser: req.params.id })
+    data.forEach(async (item) => {
+      const customData = {
+        idOder: item.IdOder,
+        idHost: item.IdHost,
+        idUser: item.IdUser,
+        idProduct: item.IdPro,
+        namePro: '',
+        nameUser: '',
+        dateCreate: item.createdAt,
+        day: item.payDay,
+        price: item.price,
+        cashMoney: item.cashMoney,
+        banking: item.banking,
+        seem: item.seem,
+        startDate: item.startDate,
+        endDate: item.endDate,
+        person: item.person,
+        phone: item.phone,
+        status: item.status,
+        time: item.createdAt,
+        
+      }
+      const pro = await product.findById({ _id: item.IdPro })
+      const userName = await user.findById({ _id: item.IdUser })
+      customData.namePro = pro.name
+      customData.nameUser = userName.name
+      dataCompile.push(customData)
+    })
+    setTimeout(() => {
+      res.status(200).json({
+        messege: true,
+        data: dataCompile.sort((a, b) => {
+          return a.time.getTime() - b.time.getTime()
+        }),
+      })
+    }, 5000)
   } catch (error) {
     res.status(401).json({
       messege: false,
