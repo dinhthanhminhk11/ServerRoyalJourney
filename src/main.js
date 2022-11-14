@@ -130,7 +130,6 @@ io.on("connection",socket=> {
         activeUser.delete(item[0])
       }
     }
-    console.log("da out")
   })
 })
 

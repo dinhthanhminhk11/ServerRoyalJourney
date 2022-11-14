@@ -1,5 +1,6 @@
 import Message from "../../models/Message"
 import user from "../../models/user";
+import send from "send";
 
 export const addMessage = async (req,res) => {
     try {
@@ -28,7 +29,6 @@ export const findMessageUser = async (req,res)=>{
         res.json({
             data
         })
-        console.log(req.params.id)
     } catch (error) {
         res.status(400).json({
             error
@@ -63,6 +63,33 @@ export const findUser = async (req,res)=>{
         })
     }
 }
+export const findMessageId = async (req,res)=>{
+    try {
+        const data = await Message.find({'send':req.params.send})
+        res.json({
+            data
+        })
+    } catch (error) {
+        res.status(400).json({
+
+            error
+        })
+    }
+}
+export const findHost = async (req,res)=>{
+    try {
+        const data = await user.find({'_id':req.params.id})
+        res.json({
+            data
+        })
+    } catch (error) {
+        res.status(400).json({
+
+            error
+        })
+    }
+}
+
 
 export const statusMessage = (req,res)=>{
     req.body.forEach(async(element) => {
