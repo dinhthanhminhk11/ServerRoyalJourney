@@ -11,6 +11,7 @@ import bathRoom from './router/routerbathroom.js'
 import message from './router/routerMessage'
 import Order from './router/routerorder'
 import bookmark from './router/routerBookmark'
+import FeedBack from './router/routerFeedBack'
 import socket from 'socket.io'
 const app = express()
 app.use(express.json())
@@ -36,6 +37,7 @@ app.use('/api', bathRoom)
 app.use('/api/Message',message)
 app.use('/api', Order)
 app.use('/api', bookmark)
+app.use('/api', FeedBack)
 const server =  app.listen(process.env.PORT, () => {
   console.log(`connected port ${process.env.PORT}`)
 })
