@@ -8,6 +8,10 @@ const bookmarkSchema = mongoose.Schema(
         idHouse:{
             type: Schema.Types.ObjectId,
             ref: 'Product',
+        },
+        isCheck: {
+            type: Boolean,
+            default: true
         }
     }
 )

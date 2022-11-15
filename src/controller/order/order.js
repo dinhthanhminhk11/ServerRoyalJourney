@@ -43,9 +43,8 @@ export const createOrder = async (req, res) => {
       person: saveOrder.person,
       phone: saveOrder.phone,
       status: 'Đang chờ xác nhận',
-      date: `${
-        date.getDay() == 0 ? 'Chủ Nhật' : 'Thứ ' + date.getDay() + 1
-      }, ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
+      date: `${date.getDay() == 0 ? 'Chủ Nhật' : 'Thứ ' + date.getDay() + 1
+        }, ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
       time: time,
     })
   } catch (error) {
@@ -73,12 +72,12 @@ export const ListOrder = async (req, res) => {
         banking: item.banking,
         seem: item.seem,
         startDate: item.startDate,
-      endDate: item.endDate,
-      person: item.person,
-      phone: item.phone,
+        endDate: item.endDate,
+        person: item.person,
+        phone: item.phone,
         status: item.status,
         time: item.createdAt,
-        
+
       }
       const pro = await product.findById({ _id: item.IdPro })
       const userName = await user.findById({ _id: item.IdUser })
@@ -93,7 +92,7 @@ export const ListOrder = async (req, res) => {
           return a.time.getTime() - b.time.getTime()
         }),
       })
-    }, 5000)
+    }, 1000)
   } catch (error) {
     res.status(401).json({
       messege: false,
@@ -198,7 +197,7 @@ export const listOrderByIdUser = async (req, res) => {
         phone: item.phone,
         status: item.status,
         time: item.createdAt,
-        
+
       }
       const pro = await product.findById({ _id: item.IdPro })
       const userName = await user.findById({ _id: item.IdUser })
