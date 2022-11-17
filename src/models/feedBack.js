@@ -9,6 +9,12 @@ const feedBackSchema = mongoose.Schema(
             type: Schema.Types.ObjectId,
             ref: 'Product',
         },
+        imgUser:{
+            type: String
+        },
+        name:{
+            type:String
+        },
         sao:{
             type: Number
         },

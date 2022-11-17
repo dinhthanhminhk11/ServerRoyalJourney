@@ -5,6 +5,8 @@ export const addFeedBack = async (req, res) => {
         const dataFeedback = {
             idUser: req.body.idUser,
             idHouse: req.body.idHouse,
+            imgUser: req.body.imgUser,
+            name: req.body.name,
             sao: req.body.sao,
             time: req.body.time,
             textUser: req.body.textUser,
