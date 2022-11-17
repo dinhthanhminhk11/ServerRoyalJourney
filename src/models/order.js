@@ -34,7 +34,7 @@ const orderSchema = mongoose.Schema(
       },
       status: {
         type: String,
-        default: 'pendding',
+        default: 'Đang chờ',
       },
       startDate:{
         type: String

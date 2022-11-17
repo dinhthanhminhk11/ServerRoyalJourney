@@ -118,6 +118,21 @@ export const updateStatus = async (req, res) => {
     })
   }
 }
+
+export const getOrderById = async (req, res) => {
+  try {
+    const dataUpdate = await order.findOne(
+      { IdOder: req.params.id }
+    )
+    console.log(dataUpdate)
+    res.status(200).json(dataUpdate)
+  } catch (error) {
+    res.status(401).json({
+      messege: false,
+    })
+  }
+}
+
 export const updateStatusDone = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
@@ -212,7 +227,7 @@ export const listOrderByIdUser = async (req, res) => {
           return a.time.getTime() - b.time.getTime()
         }),
       })
-    }, 5000)
+    }, 1000)
   } catch (error) {
     res.status(401).json({
       messege: false,
