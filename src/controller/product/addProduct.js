@@ -24,6 +24,9 @@ export const addProduct = async (req, res) => {
       bathrooms: req.body.bathroom,
       limitPerson: req.body.limitPerson,
       sleepingPlaces: req.body.sleepingPlaces,
+      startDate:  req.body.startDate,
+      endDate:  req.body.endDate,
+      isStillEmpty: false
     }
     const data = await product(dataSave).save()
     res.status(200).json({

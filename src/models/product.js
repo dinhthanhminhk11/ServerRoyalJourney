@@ -43,6 +43,12 @@ const productSchema = mongoose.Schema(
     sleepingPlaces: Array,
     opening: String,
     ending: String,
+    startDate: String,
+    endDate: String,
+    isStillEmpty: {
+      type : Boolean,
+      default: false
+    }
   },
   { timestamps: true }
 )
