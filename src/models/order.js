@@ -47,7 +47,16 @@ const orderSchema = mongoose.Schema(
       },
       phone:{
         type: String
+      },
+      reasonUser: {
+        type: String,
+        default : ""
+      },
+      reasonHost: {
+        type: String,
+        default : ""
       }
+
     },
     { timestamps: true }
   )

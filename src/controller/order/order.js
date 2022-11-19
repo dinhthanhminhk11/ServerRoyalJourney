@@ -104,7 +104,7 @@ export const updateStatus = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { IdOder: req.body.id },
-      { status: req.body.status, seem: true },
+      { status: req.body.status, seem: true , reasonHost: req.body.reasonHost },
       { new: true }
     )
     console.log(dataUpdate)
