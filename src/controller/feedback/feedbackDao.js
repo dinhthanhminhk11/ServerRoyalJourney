@@ -38,6 +38,20 @@ export const listFeedBackId = async (req, res) => {
 
     }
 }
+
+export const listFeedBackIdSearch = async (req, res) => {
+    try {
+        const dataFeedback = await feedBack.find({idHouse: req.params.idHouse, textUser:{$regex:new RegExp(req.params.tk)} })
+        res.status(200).json({
+            data: dataFeedback
+        })
+    } catch (error) {
+        res.status(401).json({
+            error
+        })
+    }
+}
+
 export const updateFeedBack = async (req, res) => {
     try {
         const updateFeedback = await feedBack.updateOne({_id: req.params.id},
