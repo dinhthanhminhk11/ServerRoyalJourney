@@ -48,6 +48,9 @@ const productSchema = mongoose.Schema(
     isStillEmpty: {
       type : Boolean,
       default: false
+    },
+    cancellatioDate: {
+      type: String
     }
   },
   { timestamps: true }
