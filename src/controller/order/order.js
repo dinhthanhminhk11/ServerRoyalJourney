@@ -12,10 +12,12 @@ export const createOrder = async (req, res) => {
       price: req.body.price,
       cashMoney: req.body.cashMoney,
       banking: req.body.banking,
+      isBackingPercent : req.body.isBackingPercent,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
       person: req.body.person,
-      phone: req.body.phone
+      phone: req.body.phone,
+      pricePercent: req.body.pricePercent
     }
     const saveOrder = await new order(dataOrder).save()
     const date = new Date(saveOrder.createdAt)
@@ -38,10 +40,12 @@ export const createOrder = async (req, res) => {
       payDay: saveOrder.payDay,
       cashMoney: saveOrder.cashMoney,
       banking: saveOrder.banking,
+      isBackingPercent : saveOrder.isBackingPercent,
       startDate: saveOrder.startDate,
       endDate: saveOrder.endDate,
       person: saveOrder.person,
       phone: saveOrder.phone,
+      pricePercent: saveOrder.pricePercent,
       status: 'Đang chờ xác nhận',
       date: `${date.getDay() == 0 ? 'Chủ Nhật' : 'Thứ ' + date.getDay() + 1
         }, ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
@@ -70,6 +74,8 @@ export const ListOrder = async (req, res) => {
         price: item.price,
         cashMoney: item.cashMoney,
         banking: item.banking,
+        isBackingPercent : item.isBackingPercent,
+        pricePercent: item.pricePercent,
         seem: item.seem,
         startDate: item.startDate,
         endDate: item.endDate,
@@ -205,6 +211,8 @@ export const listOrderByIdUser = async (req, res) => {
         price: item.price,
         cashMoney: item.cashMoney,
         banking: item.banking,
+        isBackingPercent : item.isBackingPercent,
+        pricePercent: item.pricePercent,
         seem: item.seem,
         startDate: item.startDate,
         endDate: item.endDate,

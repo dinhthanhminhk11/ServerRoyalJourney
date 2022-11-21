@@ -28,6 +28,9 @@ const orderSchema = mongoose.Schema(
       banking: {
         type: Boolean,
       },
+      isBackingPercent: {
+        type: Boolean
+      },
       seem: {
         type: Boolean,
         default: false,
@@ -55,6 +58,9 @@ const orderSchema = mongoose.Schema(
       reasonHost: {
         type: String,
         default : ""
+      },
+      pricePercent: {
+        type: String
       }
 
     },
