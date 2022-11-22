@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema({
   otpResetPass: {
     type: String,
     required: true,
-  } 
+  } ,
+  countBooking: {
+    type: Number,
+    default: 0,
+  }
 })
 export default mongoose.model('user', userSchema)

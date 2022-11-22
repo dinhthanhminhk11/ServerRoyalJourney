@@ -34,7 +34,8 @@ export const loginUser = async (req, res) => {
         image: checkEmail.image,
         phone: checkEmail.phone,
         address: checkEmail.address,
-        active : checkEmail.active
+        active : checkEmail.active,
+        countBooking: checkEmail.countBooking
       },
       "accessToken" : token, 
       
