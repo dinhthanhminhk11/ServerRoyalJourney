@@ -61,6 +61,14 @@ const orderSchema = mongoose.Schema(
       },
       pricePercent: {
         type: String
+      },
+      cancellationDate: {
+        type: String,
+        default: ""
+      },
+      isCancellationDate: {
+        type: Boolean,
+        default: false
       }
 
     },

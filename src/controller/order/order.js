@@ -113,6 +113,29 @@ export const updateStatus = async (req, res) => {
       { status: req.body.status, seem: true , reasonHost: req.body.reasonHost },
       { new: true }
     )
+    const dataProductUpdate = await product.findOneAndUpdate(
+      {_id : dataUpdate.IdPro},
+      {isStillEmpty: true},
+      { new: true }
+    )
+    res.status(200).json({
+      messege: true,
+      data: dataUpdate,
+    })
+  } catch (error) {
+    res.status(401).json({
+      messege: false,
+    })
+  }
+}
+
+export const updateOrderById = async (req, res) => {
+  try {
+    const dataUpdate = await order.findOneAndUpdate(
+      { IdOder: req.body.id },
+      { status: req.body.status, seem: true , reasonUser: req.body.reasonUser , cancellationDate : req.body.cancellationDate },
+      { new: true }
+    )
     console.log(dataUpdate)
     res.status(200).json({
       messege: true,
@@ -220,7 +243,7 @@ export const listOrderByIdUser = async (req, res) => {
         phone: item.phone,
         status: item.status,
         time: item.createdAt,
-
+        isCancellationDate: item.isCancellationDate
       }
       const pro = await product.findById({ _id: item.IdPro })
       const userName = await user.findById({ _id: item.IdUser })

@@ -7,7 +7,8 @@ import {
   updateStatus,
   updateStatusDone,
   listOrderByIdUser,
-  getOrderById
+  getOrderById,
+  updateOrderById
 } from '../controller/order/order'
 const router = Router()
 router.route('/addorder').post(createOrder)
@@ -17,5 +18,6 @@ router.route('/oderseem').post(orderNotSeem)
 router.route('/orderdone').patch(updateStatusDone)
 router.route('/ordernotices').post(orderNotices)
 router.route('/order/:id').patch(updateStatus)
+router.route('/updateOrderById').patch(updateOrderById)
 router.route('/getOrderById/:id').get(getOrderById)
 export default router
