@@ -171,6 +171,25 @@ export const updateOrderById = async (req, res) => {
   }
 }
 
+export const updateOrderByIdNotSeem = async (req, res) => {
+  try {
+    const dataUpdate = await order.findOneAndUpdate(
+      { IdOder: req.body.id },
+      { status: req.body.status, seem: false , reasonUser: req.body.reasonUser , cancellationDate : req.body.cancellationDate },
+      { new: true }
+    )
+    console.log("data lsdjfk " + dataUpdate);
+    res.status(200).json({
+      messege: true,
+      data: dataUpdate,
+    })
+  } catch (error) {
+    res.status(401).json({
+      messege: false,
+    })
+  }
+}
+
 export const getOrderById = async (req, res) => {
   try {
     const dataUpdate = await order.findOne(

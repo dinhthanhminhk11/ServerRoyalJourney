@@ -10,7 +10,8 @@ import {
   getOrderById,
   updateOrderById,
   updateStatusAccessCancel,
-  ordercancel
+  ordercancel,
+  updateOrderByIdNotSeem
 } from '../controller/order/order'
 const router = Router()
 router.route('/addorder').post(createOrder)
@@ -22,6 +23,7 @@ router.route('/ordernotices').post(orderNotices)
 router.route('/order/:id').patch(updateStatus)
 router.route('/ordercancel/:id').patch(ordercancel)
 router.route('/updateOrderById').patch(updateOrderById)
+router.route('/updateOrderByIdNotSeem').patch(updateOrderByIdNotSeem)
 router.route('/getOrderById/:id').get(getOrderById)
 router.route('/updateStatusAccessCancel/:id').patch(updateStatusAccessCancel)
 
