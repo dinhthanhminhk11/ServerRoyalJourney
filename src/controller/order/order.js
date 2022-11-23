@@ -83,7 +83,8 @@ export const ListOrder = async (req, res) => {
         phone: item.phone,
         status: item.status,
         time: item.createdAt,
-
+        isCancellationDate  : item.isCancellationDate,
+        cancellationDate : item.cancellationDate
       }
       const pro = await product.findById({ _id: item.IdPro })
       const userName = await user.findById({ _id: item.IdUser })
@@ -129,6 +130,29 @@ export const updateStatus = async (req, res) => {
   }
 }
 
+export const ordercancel = async (req, res) => {
+  try {
+    const dataUpdate = await order.findOneAndUpdate(
+      { IdOder: req.body.id },
+      { status: req.body.status, seem: true , reasonHost: req.body.reasonHost },
+      { new: true }
+    )
+    const dataProductUpdate = await product.findOneAndUpdate(
+      {_id : dataUpdate.IdPro},
+      {isStillEmpty: false},
+      { new: true }
+    )
+    res.status(200).json({
+      messege: true,
+      data: dataUpdate,
+    })
+  } catch (error) {
+    res.status(401).json({
+      messege: false,
+    })
+  }
+}
+
 export const updateOrderById = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
@@ -136,7 +160,6 @@ export const updateOrderById = async (req, res) => {
       { status: req.body.status, seem: true , reasonUser: req.body.reasonUser , cancellationDate : req.body.cancellationDate },
       { new: true }
     )
-    console.log(dataUpdate)
     res.status(200).json({
       messege: true,
       data: dataUpdate,
@@ -180,6 +203,32 @@ export const updateStatusDone = async (req, res) => {
     })
   }
 }
+
+export const updateStatusAccessCancel = async (req, res) => {
+  try {
+    const dataUpdate = await order.findOneAndUpdate(
+      { IdOder: req.body.id },
+      { isCancellationDate: true },
+      { new: true }
+    )
+    const dataProductUpdate = await product.findOneAndUpdate(
+      {_id : dataUpdate.IdPro},
+      {isStillEmpty: false},
+      { new: true }
+    )
+    res.status(200).json({
+      messege: true,
+      data: dataUpdate,
+    })
+  } catch (error) {
+    res.status(401).json({
+      messege: false,
+    })
+  }
+}
+
+
+
 export const orderNotSeem = async (req, res) => {
   try {
     const listOrderNotSeem = await order.find({ IdHost: req.body.id })

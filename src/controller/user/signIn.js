@@ -23,7 +23,6 @@ export const loginUser = async (req, res) => {
       expiresIn: 86400 // 24 hours
     });
 
-
     res.status(200).json({
       status: 'true',
       message: "Đăng nhập thành công",
@@ -98,6 +97,7 @@ export const isModerator = async (req, res, next) => {
       image: checkEmail.image,
       phone: checkEmail.phone,
       address: checkEmail.address,
+      countBooking: checkEmail.countBooking
     },
     "accessToken" : "token", 
   })
