@@ -246,8 +246,6 @@ export const updateStatusAccessCancel = async (req, res) => {
   }
 }
 
-
-
 export const orderNotSeem = async (req, res) => {
   try {
     const listOrderNotSeem = await order.find({ IdHost: req.body.id })
@@ -283,7 +281,6 @@ export const orderNotices = async (req, res) => {
     })
   }
 }
-
 
 export const listOrderByIdUser = async (req, res) => {
   try {
@@ -332,4 +329,21 @@ export const listOrderByIdUser = async (req, res) => {
       messege: false,
     })
   }
+}
+
+export const deleteOrderById = async(req, res) => {
+  try {
+    const data = await order.findOneAndDelete({
+        'IdOder': req.params.id,
+    })
+    console.log(data);
+    res.status(200).json({
+      messege: true,
+      data: data,
+    })
+} catch (error) {
+    res.status(401).json({
+        messege: false
+    })
+}
 }
