@@ -5,7 +5,7 @@ import { response } from 'express'
 
 var FCM = require('fcm-node')
 
-const Server_key = 'BMCazstJh6G2ZyX-QM5loYpom33N3DvkJVodwi95dP6qN7lNQROzCe4VS5ka3AzuEOYPatU1mInv0zisixk21_c'
+const Server_key = 'AAAAXdg_118:APA91bEVZLvJ2g1mgi--7RqdkknlLqy9g-9VpsoAY2Ve8n9xd2tyMV2Ag-4V-OA6fPnTYZFXGur3nMd-qX7xdN2ryE0n4KvnngC-eUw7hsUMZQf6uWWNeIUN_v2cIDE64Pk_Hv88n7I6'
 export const createOrder = async (req, res) => {
   try {
     const dataOrder = {
@@ -17,7 +17,7 @@ export const createOrder = async (req, res) => {
       price: req.body.price,
       cashMoney: req.body.cashMoney,
       banking: req.body.banking,
-      isBackingPercent : req.body.isBackingPercent,
+      isBackingPercent: req.body.isBackingPercent,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
       person: req.body.person,
@@ -45,7 +45,7 @@ export const createOrder = async (req, res) => {
       payDay: saveOrder.payDay,
       cashMoney: saveOrder.cashMoney,
       banking: saveOrder.banking,
-      isBackingPercent : saveOrder.isBackingPercent,
+      isBackingPercent: saveOrder.isBackingPercent,
       startDate: saveOrder.startDate,
       endDate: saveOrder.endDate,
       person: saveOrder.person,
@@ -79,7 +79,7 @@ export const ListOrder = async (req, res) => {
         price: item.price,
         cashMoney: item.cashMoney,
         banking: item.banking,
-        isBackingPercent : item.isBackingPercent,
+        isBackingPercent: item.isBackingPercent,
         pricePercent: item.pricePercent,
         seem: item.seem,
         startDate: item.startDate,
@@ -88,8 +88,8 @@ export const ListOrder = async (req, res) => {
         phone: item.phone,
         status: item.status,
         time: item.createdAt,
-        isCancellationDate  : item.isCancellationDate,
-        cancellationDate : item.cancellationDate,
+        isCancellationDate: item.isCancellationDate,
+        cancellationDate: item.cancellationDate,
         isSuccess: item.isSuccess
       }
       const pro = await product.findById({ _id: item.IdPro })
@@ -112,17 +112,16 @@ export const ListOrder = async (req, res) => {
     })
   }
 }
-
 export const updateStatus = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { IdOder: req.body.id },
-      { status: req.body.status, seem: true , reasonHost: req.body.reasonHost, isSuccess: true },
+      { status: req.body.status, seem: true, reasonHost: req.body.reasonHost, isSuccess: true },
       { new: true }
     )
     const dataProductUpdate = await product.findOneAndUpdate(
-      {_id : dataUpdate.IdPro},
-      {isStillEmpty: true},
+      { _id: dataUpdate.IdPro },
+      { isStillEmpty: true },
       { new: true }
     )
     res.status(200).json({
@@ -135,17 +134,16 @@ export const updateStatus = async (req, res) => {
     })
   }
 }
-
 export const ordercancel = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { IdOder: req.body.id },
-      { status: req.body.status, seem: true , reasonHost: req.body.reasonHost },
+      { status: req.body.status, seem: true, reasonHost: req.body.reasonHost },
       { new: true }
     )
     const dataProductUpdate = await product.findOneAndUpdate(
-      {_id : dataUpdate.IdPro},
-      {isStillEmpty: false},
+      { _id: dataUpdate.IdPro },
+      { isStillEmpty: false },
       { new: true }
     )
     res.status(200).json({
@@ -158,12 +156,11 @@ export const ordercancel = async (req, res) => {
     })
   }
 }
-
 export const updateOrderById = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { IdOder: req.body.id },
-      { status: req.body.status, seem: true , reasonUser: req.body.reasonUser , cancellationDate : req.body.cancellationDate },
+      { status: req.body.status, seem: true, reasonUser: req.body.reasonUser, cancellationDate: req.body.cancellationDate },
       { new: true }
     )
     res.status(200).json({
@@ -176,12 +173,11 @@ export const updateOrderById = async (req, res) => {
     })
   }
 }
-
 export const updateOrderByIdNotSeem = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { IdOder: req.body.id },
-      { status: req.body.status, seem: false , reasonUser: req.body.reasonUser , cancellationDate : req.body.cancellationDate },
+      { status: req.body.status, seem: false, reasonUser: req.body.reasonUser, cancellationDate: req.body.cancellationDate },
       { new: true }
     )
     console.log("data lsdjfk " + dataUpdate);
@@ -195,7 +191,6 @@ export const updateOrderByIdNotSeem = async (req, res) => {
     })
   }
 }
-
 export const getOrderById = async (req, res) => {
   try {
     const dataUpdate = await order.findOne(
@@ -209,7 +204,6 @@ export const getOrderById = async (req, res) => {
     })
   }
 }
-
 export const updateStatusDone = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
@@ -228,17 +222,16 @@ export const updateStatusDone = async (req, res) => {
     })
   }
 }
-
 export const updateStatusAccessCancel = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { IdOder: req.body.id },
-      { isCancellationDate: true , seem : false },
+      { isCancellationDate: true, seem: false },
       { new: true }
     )
     const dataProductUpdate = await product.findOneAndUpdate(
-      {_id : dataUpdate.IdPro},
-      {isStillEmpty: false},
+      { _id: dataUpdate.IdPro },
+      { isStillEmpty: false },
       { new: true }
     )
     res.status(200).json({
@@ -251,7 +244,6 @@ export const updateStatusAccessCancel = async (req, res) => {
     })
   }
 }
-
 export const orderNotSeem = async (req, res) => {
   try {
     const listOrderNotSeem = await order.find({ IdHost: req.body.id })
@@ -265,7 +257,6 @@ export const orderNotSeem = async (req, res) => {
     })
   }
 }
-
 export const orderNotices = async (req, res) => {
   try {
     const inforUser = await user
@@ -287,7 +278,6 @@ export const orderNotices = async (req, res) => {
     })
   }
 }
-
 export const listOrderByIdUser = async (req, res) => {
   try {
     const dataCompile = []
@@ -305,7 +295,7 @@ export const listOrderByIdUser = async (req, res) => {
         price: item.price,
         cashMoney: item.cashMoney,
         banking: item.banking,
-        isBackingPercent : item.isBackingPercent,
+        isBackingPercent: item.isBackingPercent,
         pricePercent: item.pricePercent,
         seem: item.seem,
         startDate: item.startDate,
@@ -337,46 +327,54 @@ export const listOrderByIdUser = async (req, res) => {
     })
   }
 }
-
-export const deleteOrderById = async(req, res) => {
+export const deleteOrderById = async (req, res) => {
   try {
     const data = await order.findOneAndDelete({
-        'IdOder': req.params.id,
+      'IdOder': req.params.id,
     })
     console.log(data);
     res.status(200).json({
       messege: true,
       data: data,
     })
-} catch (error) {
+  } catch (error) {
     res.status(401).json({
-        messege: false
+      messege: false
     })
+  }
 }
-}
-
-export const sendNotification = async(req , res) =>{
+export const sendNotification = async (req, res) => {
   try {
-      let fcm = new FCM(Server_key)
-      let message = {
-        to: '/topics/' + req.body.topic,
-        notification: {
-            title: req.body.title,
-            body: req.body.body,
-            sound: 'default',
-            "click_action": "FCM_PLUGIN_ACTIVITY",
-            "icon" : "fcm_push_icon",
-        }
+    var fcm = new FCM(Server_key);
+    var message = {
+      to: 'flwO1SzNR_yGE7_5Vmo5n5:APA91bEygKPCSQZkZW1sPFtoIGDkZHJtpVGkoGSqt704obJ3VpsKMMjRf84f8lJghXBt6UcclE3MYIx0j-Y1J2rsQ2GX76NhMPWlk7qv8ajHdP_yjBGwuKsG_xqtaB7RZ8GlU8lqEOYz',
+      notification: {
+        title: 'Xác nhận phòng',
+        body: 'Cảm ơn bạn đã sửa dụng dịch vụ của chúng tôi',
+      },
+
+      data: { //you can send only notification or only data(or include both)
+        title: 'ok cdfsdsdfsd',
+        body: '{"name" : "okg ooggle ogrlrl","product_id" : "123","final_price" : "0.00035"}'
       }
 
-      fcm.send(message , (err , response) =>{
-        if(err){
-          console.log("LOoix");
-        }else{
-          res.json(response)
-        }
-      })
+    };
+
+    fcm.send(message, function (err, response) {
+      if (err) {
+        res.status(401).json({
+          messege: false
+        })
+      } else {
+        res.status(200).json({
+          messege: true
+        })
+      }
+
+    });
   } catch (error) {
-    console.log("LOoix");
+    res.status(401).json({
+      messege: false
+    })
   }
 }
