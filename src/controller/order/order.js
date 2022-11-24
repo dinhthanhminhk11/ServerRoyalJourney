@@ -1,6 +1,11 @@
 import user from '../../models/user'
 import order from '../../models/order'
 import product from '../../models/product'
+import { response } from 'express'
+
+var FCM = require('fcm-node')
+
+const Server_key = 'BMCazstJh6G2ZyX-QM5loYpom33N3DvkJVodwi95dP6qN7lNQROzCe4VS5ka3AzuEOYPatU1mInv0zisixk21_c'
 export const createOrder = async (req, res) => {
   try {
     const dataOrder = {
@@ -348,4 +353,30 @@ export const deleteOrderById = async(req, res) => {
         messege: false
     })
 }
+}
+
+export const sendNotification = async(req , res) =>{
+  try {
+      let fcm = new FCM(Server_key)
+      let message = {
+        to: '/topics/' + req.body.topic,
+        notification: {
+            title: req.body.title,
+            body: req.body.body,
+            sound: 'default',
+            "click_action": "FCM_PLUGIN_ACTIVITY",
+            "icon" : "fcm_push_icon",
+        }
+      }
+
+      fcm.send(message , (err , response) =>{
+        if(err){
+          console.log("LOoix");
+        }else{
+          res.json(response)
+        }
+      })
+  } catch (error) {
+    console.log("LOoix");
+  }
 }
