@@ -69,6 +69,10 @@ const orderSchema = mongoose.Schema(
       isCancellationDate: {
         type: Boolean,
         default: false
+      },
+      isSuccess: {
+        type: Boolean,
+        default: false
       }
 
     },

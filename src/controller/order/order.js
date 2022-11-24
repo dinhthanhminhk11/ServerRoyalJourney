@@ -84,7 +84,8 @@ export const ListOrder = async (req, res) => {
         status: item.status,
         time: item.createdAt,
         isCancellationDate  : item.isCancellationDate,
-        cancellationDate : item.cancellationDate
+        cancellationDate : item.cancellationDate,
+        isSuccess: item.isSuccess
       }
       const pro = await product.findById({ _id: item.IdPro })
       const userName = await user.findById({ _id: item.IdUser })
@@ -111,7 +112,7 @@ export const updateStatus = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { IdOder: req.body.id },
-      { status: req.body.status, seem: true , reasonHost: req.body.reasonHost },
+      { status: req.body.status, seem: true , reasonHost: req.body.reasonHost, isSuccess: true },
       { new: true }
     )
     const dataProductUpdate = await product.findOneAndUpdate(
@@ -227,7 +228,7 @@ export const updateStatusAccessCancel = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { IdOder: req.body.id },
-      { isCancellationDate: true },
+      { isCancellationDate: true , seem : false },
       { new: true }
     )
     const dataProductUpdate = await product.findOneAndUpdate(
@@ -308,7 +309,8 @@ export const listOrderByIdUser = async (req, res) => {
         phone: item.phone,
         status: item.status,
         time: item.createdAt,
-        isCancellationDate: item.isCancellationDate
+        isCancellationDate: item.isCancellationDate,
+        isSuccess: item.isSuccess
       }
       const pro = await product.findById({ _id: item.IdPro })
       const userName = await user.findById({ _id: item.IdUser })
