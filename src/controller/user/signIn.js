@@ -34,7 +34,8 @@ export const loginUser = async (req, res) => {
         phone: checkEmail.phone,
         address: checkEmail.address,
         active : checkEmail.active,
-        countBooking: checkEmail.countBooking
+        countBooking: checkEmail.countBooking,
+        tokenDevice: checkEmail.tokenDevice
       },
       "accessToken" : token, 
       
@@ -97,7 +98,8 @@ export const isModerator = async (req, res, next) => {
       image: checkEmail.image,
       phone: checkEmail.phone,
       address: checkEmail.address,
-      countBooking: checkEmail.countBooking
+      countBooking: checkEmail.countBooking,
+      tokenDevice: checkEmail.tokenDevice
     },
     "accessToken" : "token", 
   })

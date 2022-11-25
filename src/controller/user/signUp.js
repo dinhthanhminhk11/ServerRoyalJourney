@@ -26,7 +26,8 @@ export const createUser = async (req, res) => {
       idcard: '',
       "otp": otpGenerated,
       "active" : false,
-      otpResetPass: otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false })
+      otpResetPass: otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false }),
+      tokenDevice : req.body.tokenDevice
     }
     const resault = await new user(dataUser).save()
     await sendMail({

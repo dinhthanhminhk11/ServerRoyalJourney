@@ -2,10 +2,13 @@ import user from '../../models/user'
 import order from '../../models/order'
 import product from '../../models/product'
 import { response } from 'express'
-
+const { sendMailComfirmBooking } = require('../../services/MAIL');
 var FCM = require('fcm-node')
 
 const Server_key = 'AAAAXdg_118:APA91bEVZLvJ2g1mgi--7RqdkknlLqy9g-9VpsoAY2Ve8n9xd2tyMV2Ag-4V-OA6fPnTYZFXGur3nMd-qX7xdN2ryE0n4KvnngC-eUw7hsUMZQf6uWWNeIUN_v2cIDE64Pk_Hv88n7I6'
+
+var fcm = new FCM(Server_key);
+
 export const createOrder = async (req, res) => {
   try {
     const dataOrder = {
@@ -226,7 +229,7 @@ export const updateStatusAccessCancel = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { IdOder: req.body.id },
-      { isCancellationDate: true, seem: false },
+      { isCancellationDate: true, seem: true },
       { new: true }
     )
     const dataProductUpdate = await product.findOneAndUpdate(
@@ -345,19 +348,17 @@ export const deleteOrderById = async (req, res) => {
 }
 export const sendNotification = async (req, res) => {
   try {
-    var fcm = new FCM(Server_key);
     var message = {
-      to: 'fWJJkUY9TcC9TUXxD7LGxS:APA91bGTboTGmOJ6L-C4q-FQotZa8CTL6olnT3DrY5YbOHGwtUdOl_KwZt8I5rt7u09HLqBvPrIb-PzB01Rpdk7dqOEPMUcwvYyN0KlF9E49d9QSvaf-Xa_VotvlCR8iiRJBYGqwaZRk',
-      notification: {
+      to: 'dRFGiveWS8WPUw_XZrhGAp:APA91bF1KkCZvBSD3vvPEr7Y8w3Tt3NK7-Di_VEABq1f8KpaTBBlNeESwpxwYaeSOpVbGcezuB8nsTLNB1T7NBTunl2Ecvf1qBThx9M8_rLstB-jbsXrBbmMg_MCm1Z7NavNf_tCP9Kr',
+      data: { //you can send only notification or only data(or include both)
         title: 'Xác nhận phòng',
         body: 'Cảm ơn bạn đã sửa dụng dịch vụ của chúng tôi',
+        idOder: "RJ2096268",
+        image: "https://danviet.mediacdn.vn/2021/1/6/13197933916907312977860828685791406656205212o-16099346980101815349486.jpg"
       },
-      data: { //you can send only notification or only data(or include both)
-        text : "con cặc đéo trình bày",
-        title: 'ok cdfsdsdfsd',
-        body: '{"name" : "okg ooggle ogrlrl","product_id" : "123","final_price" : "0.00035"}'
+      android:{
+        "priority":"normal"
       }
-
     };
 
     fcm.send(message, function (err, response) {
@@ -371,6 +372,172 @@ export const sendNotification = async (req, res) => {
         })
       }
 
+    });
+  } catch (error) {
+    res.status(401).json({
+      messege: false
+    })
+  }
+}
+
+export const senNotificationAccess = async (req, res) => {
+  try {
+    const dataOrder = await order.findOne({
+      IdOder: req.body.id
+    })
+    const dataUser = await user.findOne({
+      _id: dataOrder.IdUser
+    })
+
+    const dataProduct = await product.findOne({
+      _id: dataOrder.IdPro
+    })
+    var message = {
+      to: dataUser.tokenDevice,
+      data: { //you can send only notification or only data(or include both)
+        title: 'Xác nhận phòng',
+        body: 'Yêu cầu đặt phòng của bạn đã được ' + dataProduct.name + ' chấp nhận',
+        idOder: dataOrder.IdOder,
+        image: dataProduct.images[0]
+      },
+      android:{
+        "priority":"normal"
+      }
+    };
+    fcm.send(message, function (err, response) {
+      if (err) {
+        res.status(401).json({
+          messege: false
+        })
+      } else {
+        res.status(200).json({
+          messege: true
+        })
+      }
+    });
+  } catch (error) {
+    res.status(401).json({
+      messege: false
+    })
+  }
+}
+
+export const senNotificationCancel = async (req, res) => {
+  try {
+    const dataOrder = await order.findOne({
+      IdOder: req.body.id
+    })
+    const dataUser = await user.findOne({
+      _id: dataOrder.IdUser
+    })
+
+    const dataProduct = await product.findOne({
+      _id: dataOrder.IdPro
+    })
+    var message = {
+      to: dataUser.tokenDevice,
+      data: { //you can send only notification or only data(or include both)
+        title: 'Yêu cầu không được chấp nhận',
+        body: 'Chủ phòng ' + dataProduct.name + ' đã từ chối bạn. Lí do: "' + req.body.reasonHost +'"',
+        idOder: dataOrder.IdOder,
+        image: dataProduct.images[0]
+      },
+      android:{
+        "priority":"normal"
+      }
+    };
+    fcm.send(message, function (err, response) {
+      if (err) {
+        res.status(401).json({
+          messege: false
+        })
+      } else {
+        res.status(200).json({
+          messege: true
+        })
+      }
+    });
+  } catch (error) {
+    res.status(401).json({
+      messege: false
+    })
+  }
+}
+
+export const senNotificationRequestCancel = async (req, res) => {
+  try {
+    const dataOrder = await order.findOne({
+      IdOder: req.body.id
+    })
+    const dataUser = await user.findOne({
+      _id: dataOrder.IdUser
+    })
+
+    const dataProduct = await product.findOne({
+      _id: dataOrder.IdPro
+    })
+    var message = {
+      to: dataUser.tokenDevice,
+      data: { //you can send only notification or only data(or include both)
+        title: 'Xác nhận huỷ phòng',
+        body: 'Chủ phòng ' + dataProduct.name + ' đã chấp nhận yêu cầu huỷ phòng của bạn',
+        idOder: dataOrder.IdOder,
+        image: dataProduct.images[0]
+      },
+      android:{
+        "priority":"normal"
+      }
+    };
+    fcm.send(message, function (err, response) {
+      if (err) {
+        res.status(401).json({
+          messege: false
+        })
+      } else {
+        res.status(200).json({
+          messege: true
+        })
+      }
+    });
+  } catch (error) {
+    res.status(401).json({
+      messege: false
+    })
+  }
+}
+
+export const senMailnAccess = async (req, res) => {
+  try {
+    const dataOrder = await order.findOne({
+      IdOder: req.body.id
+    })
+    const dataUser = await user.findOne({
+      _id: dataOrder.IdUser
+    })
+
+    const dataHost = await user.findOne({
+      _id: dataOrder.IdHost
+    })
+
+    const dataProduct = await product.findOne({
+      _id: dataOrder.IdPro
+    })
+
+    await sendMailComfirmBooking({
+      to: dataUser.email,
+      phone: dataOrder.phone,
+      nameUser: dataUser.name,
+      endDate: dataOrder.endDate,
+      startDate:dataOrder.startDate,
+      countDay:dataOrder.payDay,
+      countPerson:dataOrder.person,
+      namePro:dataProduct.name,
+      address:dataProduct.nameLocation,
+      nameHost: dataHost.name,
+      image1: dataProduct.images[0],
+      image3: dataProduct.images[3],
+      image2: dataProduct.images[2],
+      image4: dataProduct.images[4],
     });
   } catch (error) {
     res.status(401).json({

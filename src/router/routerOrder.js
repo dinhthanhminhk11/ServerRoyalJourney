@@ -13,7 +13,11 @@ import {
   ordercancel,
   updateOrderByIdNotSeem,
   deleteOrderById,
-  sendNotification
+  sendNotification,
+  senNotificationAccess,
+  senNotificationCancel,
+  senNotificationRequestCancel,
+  senMailnAccess
 } from '../controller/order/order'
 const router = Router()
 router.route('/addorder').post(createOrder)
@@ -31,4 +35,8 @@ router.route('/updateStatusAccessCancel/:id').patch(updateStatusAccessCancel)
 router.route('/deleteOrderById/:id').delete(deleteOrderById)
 
 router.route('/sendNotification').post(sendNotification)
+router.route('/senNotificationAccess').post(senNotificationAccess)
+router.route('/senNotificationCancel').post(senNotificationCancel)
+router.route('/senNotificationRequestCancel').post(senNotificationRequestCancel)
+router.route('/senMailnAccess').post(senMailnAccess)
 export default router
