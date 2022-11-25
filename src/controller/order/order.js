@@ -347,13 +347,13 @@ export const sendNotification = async (req, res) => {
   try {
     var fcm = new FCM(Server_key);
     var message = {
-      to: 'flwO1SzNR_yGE7_5Vmo5n5:APA91bEygKPCSQZkZW1sPFtoIGDkZHJtpVGkoGSqt704obJ3VpsKMMjRf84f8lJghXBt6UcclE3MYIx0j-Y1J2rsQ2GX76NhMPWlk7qv8ajHdP_yjBGwuKsG_xqtaB7RZ8GlU8lqEOYz',
+      to: 'fWJJkUY9TcC9TUXxD7LGxS:APA91bGTboTGmOJ6L-C4q-FQotZa8CTL6olnT3DrY5YbOHGwtUdOl_KwZt8I5rt7u09HLqBvPrIb-PzB01Rpdk7dqOEPMUcwvYyN0KlF9E49d9QSvaf-Xa_VotvlCR8iiRJBYGqwaZRk',
       notification: {
         title: 'Xác nhận phòng',
         body: 'Cảm ơn bạn đã sửa dụng dịch vụ của chúng tôi',
       },
-
       data: { //you can send only notification or only data(or include both)
+        text : "con cặc đéo trình bày",
         title: 'ok cdfsdsdfsd',
         body: '{"name" : "okg ooggle ogrlrl","product_id" : "123","final_price" : "0.00035"}'
       }

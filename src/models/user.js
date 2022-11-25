@@ -43,6 +43,9 @@ const userSchema = new mongoose.Schema({
   countBooking: {
     type: Number,
     default: 0,
+  },
+  tokenDevice: {
+    type: String
   }
 })
 export default mongoose.model('user', userSchema)
