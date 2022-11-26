@@ -17,7 +17,8 @@ import {
   senNotificationAccess,
   senNotificationCancel,
   senNotificationRequestCancel,
-  senMailnAccess
+  senMailnAccess,
+  checkedOutRoom
 } from '../controller/order/order'
 const router = Router()
 router.route('/addorder').post(createOrder)
@@ -39,4 +40,5 @@ router.route('/senNotificationAccess').post(senNotificationAccess)
 router.route('/senNotificationCancel').post(senNotificationCancel)
 router.route('/senNotificationRequestCancel').post(senNotificationRequestCancel)
 router.route('/senMailnAccess').post(senMailnAccess)
+router.route('/checkedOutRoom').post(checkedOutRoom)
 export default router

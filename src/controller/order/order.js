@@ -93,7 +93,8 @@ export const ListOrder = async (req, res) => {
         time: item.createdAt,
         isCancellationDate: item.isCancellationDate,
         cancellationDate: item.cancellationDate,
-        isSuccess: item.isSuccess
+        isSuccess: item.isSuccess,
+        checkedOut: item.checkedOut
       }
       const pro = await product.findById({ _id: item.IdPro })
       const userName = await user.findById({ _id: item.IdUser })
@@ -308,7 +309,8 @@ export const listOrderByIdUser = async (req, res) => {
         status: item.status,
         time: item.createdAt,
         isCancellationDate: item.isCancellationDate,
-        isSuccess: item.isSuccess
+        isSuccess: item.isSuccess,
+        checkedOut: item.checkedOut
       }
       const pro = await product.findById({ _id: item.IdPro })
       const userName = await user.findById({ _id: item.IdUser })
@@ -542,6 +544,41 @@ export const senMailnAccess = async (req, res) => {
   } catch (error) {
     res.status(401).json({
       messege: false
+    })
+  }
+}
+
+export const checkedOutRoom =async (req, res) => {
+  try {
+    const dataUpdate = await order.findOneAndUpdate(
+      { IdOder: req.body.id },
+      { checkedOut: true,status: 'Đã trả phòng' },
+      { new: true }
+    )
+
+    const userUpdate= await user.findById({_id: dataUpdate.IdUser})
+
+    const dataUser = await user.findOneAndUpdate(
+      { _id: dataUpdate.IdUser },
+      { countBooking: userUpdate.countBooking +=1 },
+      { new: true }
+    )
+
+    const dataProduct = await product.findOneAndUpdate(
+      { _id: dataUpdate.IdPro },
+      { isStillEmpty: false },
+      { new: true }
+    )
+
+    res.status(200).json({
+      messege: true,
+      data: dataUpdate,
+    })
+
+  } catch (error) {
+    res.status(200).json({
+      messege: true,
+      status: "Lỗi",
     })
   }
 }

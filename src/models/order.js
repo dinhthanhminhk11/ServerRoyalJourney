@@ -73,6 +73,10 @@ const orderSchema = mongoose.Schema(
       isSuccess: {
         type: Boolean,
         default: false
+      },
+      checkedOut: {
+        type: Boolean,
+        default: false
       }
 
     },
