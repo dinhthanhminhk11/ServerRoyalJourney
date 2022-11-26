@@ -185,3 +185,48 @@ export const newPass = async (req , res ) => {
     })
   }
 };
+
+
+export const updateCheckTokenDevice = async (req , res) =>{
+  try {
+    const dataUserUpdate = await user.findOneAndUpdate(
+      { _id: req.body.id },
+      { tokenDevice: req.body.tokenDevice },
+      { new: true }
+    )
+    return  res.status(200).json({
+      status: true,
+      message: 'Update thành công'
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      message: 'Không tìm thấy data',
+    })
+  }
+}
+
+export const updateInfoUser = async (req , res) =>{
+  try {
+    const dataUserUpdate = await user.findOneAndUpdate(
+      { _id: req.body.id },
+      { 
+        name: req.body.name,
+        phone: req.body.phone,
+        idcard: req.body.idcard,
+        address: req.body.address,
+        image: req.body.image
+      },
+      { new: true }
+    )
+    return  res.status(200).json({
+      status: true,
+      message: 'Update thành công'
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      message: 'User không tồn tại',
+    })
+  }
+}

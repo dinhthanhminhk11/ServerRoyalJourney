@@ -349,7 +349,7 @@ export const deleteOrderById = async (req, res) => {
 export const sendNotification = async (req, res) => {
   try {
     var message = {
-      to: 'dRFGiveWS8WPUw_XZrhGAp:APA91bF1KkCZvBSD3vvPEr7Y8w3Tt3NK7-Di_VEABq1f8KpaTBBlNeESwpxwYaeSOpVbGcezuB8nsTLNB1T7NBTunl2Ecvf1qBThx9M8_rLstB-jbsXrBbmMg_MCm1Z7NavNf_tCP9Kr',
+      to: 'd0uw1UO0RCGCMbteSM-SZs:APA91bHzunneO25hFcpKIJZH_GNRCW1Bdvth5HbAxUOP7hdkYo9Gh7jI0YfLm8YDSLJToOmQ-nNITGLHgHmHA9tFD30cvvKUIUa9sGnrrOPVDd9OQ4bh9KLm-a630SyCk436Bu2xYNQK',
       data: { //you can send only notification or only data(or include both)
         title: 'Xác nhận phòng',
         body: 'Cảm ơn bạn đã sửa dụng dịch vụ của chúng tôi',
