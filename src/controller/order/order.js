@@ -124,11 +124,58 @@ export const updateStatus = async (req, res) => {
       { status: req.body.status, seem: true, reasonHost: req.body.reasonHost, isSuccess: true },
       { new: true }
     )
+
     const dataProductUpdate = await product.findOneAndUpdate(
       { _id: dataUpdate.IdPro },
       { isStillEmpty: true },
       { new: true }
     )
+
+    const dataOrderMutil = await order.updateMany({
+      status: 'Đang chờ',
+      IdPro: dataUpdate.IdPro
+    },{ $set:{
+      status: "Chủ đã huỷ", seem: true, reasonHost: "Hết Phòng"
+    }}
+    )
+
+    // const dataOrder = await order.findOne({
+    //   IdOder: req.body.id
+    // })
+    // const dataUser = await user.findOne({
+    //   _id: dataOrder.IdUser
+    // })
+
+    // const dataProduct = await product.findOne({
+    //   _id: dataOrder.IdPro
+    // })
+
+    // var message = {
+    //   to: dataUser.tokenDevice,
+    //   data: { //you can send only notification or only data(or include both)
+    //     title: 'Yêu cầu không được chấp nhận',
+    //     body: 'Chủ phòng ' + dataProduct.name + ' đã từ chối bạn. Lí do: "' + req.body.reasonHost +'"',
+    //     idOder: dataOrder.IdOder,
+    //     image: dataProduct.images[0]
+    //   },
+    //   android:{
+    //     "priority":"normal"
+    //   }
+    // };
+    // fcm.send(message, function (err, response) {
+    //   if (err) {
+    //     res.status(401).json({
+    //       messege: false
+    //     })
+    //   } else {
+    //     res.status(200).json({
+    //       messege: true
+    //     })
+    //   }
+    // });
+
+
+    
     res.status(200).json({
       messege: true,
       data: dataUpdate,
@@ -744,4 +791,24 @@ export const sendMailComfirmCancelByHostPost = async (req, res) => {
       messege: false
     })
   }
+}
+
+export const checkMuiltuNoti = async(req , res)=>{
+try {
+  const dataOrderMutil = await order.updateMany({
+    status: 'Đang chờ'
+  },{ $set:{
+    status: "Chủ đã huỷ", seem: true, reasonHost: "Hết Phòng"
+  }}
+  )
+  // res.status(200).json({
+  //   messege: false,
+  //   data: dataOrder
+  // })
+
+} catch (error) {
+  res.status(401).json({
+      messege: false
+    })
+}
 }

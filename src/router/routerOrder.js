@@ -22,7 +22,8 @@ import {
   senNotificationRequestCheckOut,
   senMailCheckOutPost,
   sendMailComfirmCancelByUserPost,
-  sendMailComfirmCancelByHostPost
+  sendMailComfirmCancelByHostPost,
+  checkMuiltuNoti
 } from '../controller/order/order'
 const router = Router()
 router.route('/addorder').post(createOrder)
@@ -51,4 +52,6 @@ router.route('/sendMailComfirmCancelByUserPost').post(sendMailComfirmCancelByUse
 router.route('/sendMailComfirmCancelByHostPost').post(sendMailComfirmCancelByHostPost)
 
 router.route('/checkedOutRoom').post(checkedOutRoom)
+
+router.route('/checkMuiltuNoti').post(checkMuiltuNoti)
 export default router

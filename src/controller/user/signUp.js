@@ -144,7 +144,6 @@ export const checkEmailForgot = async (req , res) =>{
   }
 }
 
-
 export const validateUserPass = async (req , res ) => {
   try {
     const userData = await user.findOne({
@@ -185,7 +184,6 @@ export const newPass = async (req , res ) => {
     })
   }
 };
-
 
 export const updateCheckTokenDevice = async (req , res) =>{
   try {
