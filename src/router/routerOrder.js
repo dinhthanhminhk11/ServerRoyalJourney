@@ -18,7 +18,11 @@ import {
   senNotificationCancel,
   senNotificationRequestCancel,
   senMailnAccess,
-  checkedOutRoom
+  checkedOutRoom,
+  senNotificationRequestCheckOut,
+  senMailCheckOutPost,
+  sendMailComfirmCancelByUserPost,
+  sendMailComfirmCancelByHostPost
 } from '../controller/order/order'
 const router = Router()
 router.route('/addorder').post(createOrder)
@@ -40,5 +44,11 @@ router.route('/senNotificationAccess').post(senNotificationAccess)
 router.route('/senNotificationCancel').post(senNotificationCancel)
 router.route('/senNotificationRequestCancel').post(senNotificationRequestCancel)
 router.route('/senMailnAccess').post(senMailnAccess)
+router.route('/senMailCheckOut').post(senMailCheckOutPost)
+router.route('/senNotificationRequestCheckOut').post(senNotificationRequestCheckOut)
+
+router.route('/sendMailComfirmCancelByUserPost').post(sendMailComfirmCancelByUserPost)
+router.route('/sendMailComfirmCancelByHostPost').post(sendMailComfirmCancelByHostPost)
+
 router.route('/checkedOutRoom').post(checkedOutRoom)
 export default router

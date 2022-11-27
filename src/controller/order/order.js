@@ -3,6 +3,7 @@ import order from '../../models/order'
 import product from '../../models/product'
 import { response } from 'express'
 const { sendMailComfirmBooking } = require('../../services/MAIL');
+const { sendMailCheckOut,sendMailComfirmCancelByUser ,sendMailComfirmCancelByHost } = require('../../services/MAIL');
 var FCM = require('fcm-node')
 
 const Server_key = 'AAAAXdg_118:APA91bEVZLvJ2g1mgi--7RqdkknlLqy9g-9VpsoAY2Ve8n9xd2tyMV2Ag-4V-OA6fPnTYZFXGur3nMd-qX7xdN2ryE0n4KvnngC-eUw7hsUMZQf6uWWNeIUN_v2cIDE64Pk_Hv88n7I6'
@@ -322,7 +323,7 @@ export const listOrderByIdUser = async (req, res) => {
       res.status(200).json({
         messege: true,
         data: dataCompile.sort((a, b) => {
-          return a.time.getTime() - b.time.getTime()
+          return b.time.getTime() - a.time.getTime()
         }),
       })
     }, 1000)
@@ -579,6 +580,168 @@ export const checkedOutRoom =async (req, res) => {
     res.status(200).json({
       messege: true,
       status: "Lỗi",
+    })
+  }
+}
+
+export const senNotificationRequestCheckOut = async (req, res) => {
+  try {
+    const dataOrder = await order.findOne({
+      IdOder: req.body.id
+    })
+    const dataUser = await user.findOne({
+      _id: dataOrder.IdUser
+    })
+
+    const dataProduct = await product.findOne({
+      _id: dataOrder.IdPro
+    })
+    var message = {
+      to: dataUser.tokenDevice,
+      data: { //you can send only notification or only data(or include both)
+        title: 'Hoàn tất',
+        body: 'Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi, Chủ phòng ' + dataProduct.name + ' ý kiến của bạn sẽ là động lực cho chúng tôi phát triển và hoàn thiện hơn',
+        idOder: dataOrder.IdOder,
+        image: dataProduct.images[0]
+      },
+      android:{
+        "priority":"normal"
+      }
+    };
+    fcm.send(message, function (err, response) {
+      if (err) {
+        res.status(401).json({
+          messege: false
+        })
+      } else {
+        res.status(200).json({
+          messege: true
+        })
+      }
+    });
+  } catch (error) {
+    res.status(401).json({
+      messege: false
+    })
+  }
+}
+
+export const senMailCheckOutPost = async (req, res) => {
+  try {
+    const dataOrder = await order.findOne({
+      IdOder: req.body.id
+    })
+    const dataUser = await user.findOne({
+      _id: dataOrder.IdUser
+    })
+
+    const dataHost = await user.findOne({
+      _id: dataOrder.IdHost
+    })
+
+    const dataProduct = await product.findOne({
+      _id: dataOrder.IdPro
+    })
+
+    await sendMailCheckOut({
+      to: dataUser.email,
+      phone: dataOrder.phone,
+      nameUser: dataUser.name,
+      endDate: dataOrder.endDate,
+      startDate:dataOrder.startDate,
+      countDay:dataOrder.payDay,
+      countPerson:dataOrder.person,
+      namePro:dataProduct.name,
+      address:dataProduct.nameLocation,
+      nameHost: dataHost.name,
+      image1: dataProduct.images[0],
+      image3: dataProduct.images[3],
+      image2: dataProduct.images[2],
+      image4: dataProduct.images[4],
+    });
+  } catch (error) {
+    res.status(401).json({
+      messege: false
+    })
+  }
+}
+
+export const sendMailComfirmCancelByUserPost = async (req, res) => {
+  try {
+    const dataOrder = await order.findOne({
+      IdOder: req.body.id
+    })
+    const dataUser = await user.findOne({
+      _id: dataOrder.IdUser
+    })
+
+    const dataHost = await user.findOne({
+      _id: dataOrder.IdHost
+    })
+
+    const dataProduct = await product.findOne({
+      _id: dataOrder.IdPro
+    })
+
+    await sendMailComfirmCancelByUser({
+      to: dataUser.email,
+      phone: dataOrder.phone,
+      nameUser: dataUser.name,
+      endDate: dataOrder.endDate,
+      startDate:dataOrder.startDate,
+      countDay:dataOrder.payDay,
+      countPerson:dataOrder.person,
+      namePro:dataProduct.name,
+      address:dataProduct.nameLocation,
+      nameHost: dataHost.name,
+      image1: dataProduct.images[0],
+      image3: dataProduct.images[3],
+      image2: dataProduct.images[2],
+      image4: dataProduct.images[4],
+    });
+  } catch (error) {
+    res.status(401).json({
+      messege: false
+    })
+  }
+}
+
+export const sendMailComfirmCancelByHostPost = async (req, res) => {
+  try {
+    const dataOrder = await order.findOne({
+      IdOder: req.body.id
+    })
+    const dataUser = await user.findOne({
+      _id: dataOrder.IdUser
+    })
+
+    const dataHost = await user.findOne({
+      _id: dataOrder.IdHost
+    })
+
+    const dataProduct = await product.findOne({
+      _id: dataOrder.IdPro
+    })
+
+    await sendMailComfirmCancelByHost({
+      to: dataUser.email,
+      phone: dataOrder.phone,
+      nameUser: dataUser.name,
+      endDate: dataOrder.endDate,
+      startDate:dataOrder.startDate,
+      countDay:dataOrder.payDay,
+      countPerson:dataOrder.person,
+      namePro:dataProduct.name,
+      address:dataProduct.nameLocation,
+      nameHost: dataHost.name,
+      image1: dataProduct.images[0],
+      image3: dataProduct.images[3],
+      image2: dataProduct.images[2],
+      image4: dataProduct.images[4],
+    });
+  } catch (error) {
+    res.status(401).json({
+      messege: false
     })
   }
 }
