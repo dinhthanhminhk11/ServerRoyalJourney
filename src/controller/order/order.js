@@ -1,9 +1,10 @@
 import user from '../../models/user'
 import order from '../../models/order'
 import product from '../../models/product'
+import noti from '../../models/Noti'
 import { response } from 'express'
 const { sendMailComfirmBooking } = require('../../services/MAIL');
-const { sendMailCheckOut,sendMailComfirmCancelByUser ,sendMailComfirmCancelByHost } = require('../../services/MAIL');
+const { sendMailCheckOut, sendMailComfirmCancelByUser, sendMailComfirmCancelByHost } = require('../../services/MAIL');
 var FCM = require('fcm-node')
 
 const Server_key = 'AAAAXdg_118:APA91bEVZLvJ2g1mgi--7RqdkknlLqy9g-9VpsoAY2Ve8n9xd2tyMV2Ag-4V-OA6fPnTYZFXGur3nMd-qX7xdN2ryE0n4KvnngC-eUw7hsUMZQf6uWWNeIUN_v2cIDE64Pk_Hv88n7I6'
@@ -134,9 +135,11 @@ export const updateStatus = async (req, res) => {
     const dataOrderMutil = await order.updateMany({
       status: 'Đang chờ',
       IdPro: dataUpdate.IdPro
-    },{ $set:{
-      status: "Chủ đã huỷ", seem: true, reasonHost: "Hết Phòng"
-    }}
+    }, {
+      $set: {
+        status: "Chủ đã huỷ", seem: true, reasonHost: "Hết Phòng"
+      }
+    }
     )
 
     // const dataOrder = await order.findOne({
@@ -175,7 +178,7 @@ export const updateStatus = async (req, res) => {
     // });
 
 
-    
+
     res.status(200).json({
       messege: true,
       data: dataUpdate,
@@ -284,6 +287,11 @@ export const updateStatusAccessCancel = async (req, res) => {
     const dataProductUpdate = await product.findOneAndUpdate(
       { _id: dataUpdate.IdPro },
       { isStillEmpty: false },
+      { new: true }
+    )
+    const dataUser = await user.findOneAndUpdate(
+      { _id: dataUpdate.IdUser },
+      { countBooking: userUpdate.countBooking -= 1 },
       { new: true }
     )
     res.status(200).json({
@@ -406,8 +414,8 @@ export const sendNotification = async (req, res) => {
         idOder: "RJ2096268",
         image: "https://danviet.mediacdn.vn/2021/1/6/13197933916907312977860828685791406656205212o-16099346980101815349486.jpg"
       },
-      android:{
-        "priority":"normal"
+      android: {
+        "priority": "normal"
       }
     };
 
@@ -450,8 +458,8 @@ export const senNotificationAccess = async (req, res) => {
         idOder: dataOrder.IdOder,
         image: dataProduct.images[0]
       },
-      android:{
-        "priority":"normal"
+      android: {
+        "priority": "normal"
       }
     };
     fcm.send(message, function (err, response) {
@@ -488,12 +496,12 @@ export const senNotificationCancel = async (req, res) => {
       to: dataUser.tokenDevice,
       data: { //you can send only notification or only data(or include both)
         title: 'Yêu cầu không được chấp nhận',
-        body: 'Chủ phòng ' + dataProduct.name + ' đã từ chối bạn. Lí do: "' + req.body.reasonHost +'"',
+        body: 'Chủ phòng ' + dataProduct.name + ' đã từ chối bạn. Lí do: "' + req.body.reasonHost + '"',
         idOder: dataOrder.IdOder,
         image: dataProduct.images[0]
       },
-      android:{
-        "priority":"normal"
+      android: {
+        "priority": "normal"
       }
     };
     fcm.send(message, function (err, response) {
@@ -534,8 +542,8 @@ export const senNotificationRequestCancel = async (req, res) => {
         idOder: dataOrder.IdOder,
         image: dataProduct.images[0]
       },
-      android:{
-        "priority":"normal"
+      android: {
+        "priority": "normal"
       }
     };
     fcm.send(message, function (err, response) {
@@ -578,11 +586,11 @@ export const senMailnAccess = async (req, res) => {
       phone: dataOrder.phone,
       nameUser: dataUser.name,
       endDate: dataOrder.endDate,
-      startDate:dataOrder.startDate,
-      countDay:dataOrder.payDay,
-      countPerson:dataOrder.person,
-      namePro:dataProduct.name,
-      address:dataProduct.nameLocation,
+      startDate: dataOrder.startDate,
+      countDay: dataOrder.payDay,
+      countPerson: dataOrder.person,
+      namePro: dataProduct.name,
+      address: dataProduct.nameLocation,
       nameHost: dataHost.name,
       image1: dataProduct.images[0],
       image3: dataProduct.images[3],
@@ -596,19 +604,19 @@ export const senMailnAccess = async (req, res) => {
   }
 }
 
-export const checkedOutRoom =async (req, res) => {
+export const checkedOutRoom = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { IdOder: req.body.id },
-      { checkedOut: true,status: 'Đã trả phòng' },
+      { checkedOut: true, status: 'Đã trả phòng' },
       { new: true }
     )
 
-    const userUpdate= await user.findById({_id: dataUpdate.IdUser})
+    const userUpdate = await user.findById({ _id: dataUpdate.IdUser })
 
     const dataUser = await user.findOneAndUpdate(
       { _id: dataUpdate.IdUser },
-      { countBooking: userUpdate.countBooking +=1 },
+      { countBooking: userUpdate.countBooking += 1 },
       { new: true }
     )
 
@@ -651,8 +659,8 @@ export const senNotificationRequestCheckOut = async (req, res) => {
         idOder: dataOrder.IdOder,
         image: dataProduct.images[0]
       },
-      android:{
-        "priority":"normal"
+      android: {
+        "priority": "normal"
       }
     };
     fcm.send(message, function (err, response) {
@@ -695,11 +703,11 @@ export const senMailCheckOutPost = async (req, res) => {
       phone: dataOrder.phone,
       nameUser: dataUser.name,
       endDate: dataOrder.endDate,
-      startDate:dataOrder.startDate,
-      countDay:dataOrder.payDay,
-      countPerson:dataOrder.person,
-      namePro:dataProduct.name,
-      address:dataProduct.nameLocation,
+      startDate: dataOrder.startDate,
+      countDay: dataOrder.payDay,
+      countPerson: dataOrder.person,
+      namePro: dataProduct.name,
+      address: dataProduct.nameLocation,
       nameHost: dataHost.name,
       image1: dataProduct.images[0],
       image3: dataProduct.images[3],
@@ -735,11 +743,11 @@ export const sendMailComfirmCancelByUserPost = async (req, res) => {
       phone: dataOrder.phone,
       nameUser: dataUser.name,
       endDate: dataOrder.endDate,
-      startDate:dataOrder.startDate,
-      countDay:dataOrder.payDay,
-      countPerson:dataOrder.person,
-      namePro:dataProduct.name,
-      address:dataProduct.nameLocation,
+      startDate: dataOrder.startDate,
+      countDay: dataOrder.payDay,
+      countPerson: dataOrder.person,
+      namePro: dataProduct.name,
+      address: dataProduct.nameLocation,
       nameHost: dataHost.name,
       image1: dataProduct.images[0],
       image3: dataProduct.images[3],
@@ -775,11 +783,11 @@ export const sendMailComfirmCancelByHostPost = async (req, res) => {
       phone: dataOrder.phone,
       nameUser: dataUser.name,
       endDate: dataOrder.endDate,
-      startDate:dataOrder.startDate,
-      countDay:dataOrder.payDay,
-      countPerson:dataOrder.person,
-      namePro:dataProduct.name,
-      address:dataProduct.nameLocation,
+      startDate: dataOrder.startDate,
+      countDay: dataOrder.payDay,
+      countPerson: dataOrder.person,
+      namePro: dataProduct.name,
+      address: dataProduct.nameLocation,
       nameHost: dataHost.name,
       image1: dataProduct.images[0],
       image3: dataProduct.images[3],
@@ -793,22 +801,204 @@ export const sendMailComfirmCancelByHostPost = async (req, res) => {
   }
 }
 
-export const checkMuiltuNoti = async(req , res)=>{
-try {
-  const dataOrderMutil = await order.updateMany({
-    status: 'Đang chờ'
-  },{ $set:{
-    status: "Chủ đã huỷ", seem: true, reasonHost: "Hết Phòng"
-  }}
-  )
-  // res.status(200).json({
-  //   messege: false,
-  //   data: dataOrder
-  // })
+export const checkMuiltuNoti = async (req, res) => {
+  try {
+    const dataOrderMutil = await order.updateMany({
+      status: 'Đang chờ'
+    }, {
+      $set: {
+        status: "Chủ đã huỷ", seem: true, reasonHost: "Hết Phòng"
+      }
+    }
+    )
+    // res.status(200).json({
+    //   messege: false,
+    //   data: dataOrder
+    // })
 
-} catch (error) {
-  res.status(401).json({
+  } catch (error) {
+    res.status(401).json({
       messege: false
     })
+  }
 }
+
+
+
+
+export const createNotiAccess = async (req, res) => {
+  let ts = Date.now();
+  let date_ob = new Date(ts);
+  let date = date_ob.getDate();
+  let month = date_ob.getMonth() + 1;
+  let year = date_ob.getFullYear();
+  let hours = date_ob.getHours();
+  let minutes = date_ob.getMinutes();
+  let seconds = date_ob.getSeconds();
+  try {
+    const dataOrder = await order.findOne({
+      IdOder: req.body.id
+    })
+
+    const dataProduct = await product.findOne({
+      _id: dataOrder.IdPro
+    })
+
+    const dataNewNoti = {
+      idOder: dataOrder.IdOder,
+      idUser: dataOrder.IdUser,
+      title: 'Xác nhận phòng',
+      content: 'Yêu cầu đặt phòng của bạn đã được ' + dataProduct.name + ' chấp nhận',
+      imageHoust: dataProduct.images[0],
+      date: date + "/" + month + "/" + year,
+      time: hours + ":" + minutes+ ":" +seconds
+    }
+    const saveOrder = await new noti(dataNewNoti).save()
+    res.status(200).json({
+      messege: true,
+      data: saveOrder
+    })
+
+  } catch (error) {
+    res.status(401).json({
+      messege: false
+    })
+  }
+}
+
+export const createNotiCancel = async (req, res) => {
+  let ts = Date.now();
+  let date_ob = new Date(ts);
+  let date = date_ob.getDate();
+  let month = date_ob.getMonth() + 1;
+  let year = date_ob.getFullYear();
+  let hours = date_ob.getHours();
+  let minutes = date_ob.getMinutes();
+  let seconds = date_ob.getSeconds();
+  try {
+    const dataOrder = await order.findOne({
+      IdOder: req.body.id
+    })
+
+    const dataProduct = await product.findOne({
+      _id: dataOrder.IdPro
+    })
+
+    const dataNewNoti = {
+      idOder: dataOrder.IdOder,
+      idUser: dataOrder.IdUser,
+      title: 'Yêu cầu không được chấp nhận',
+      content: 'Chủ phòng ' + dataProduct.name + ' đã từ chối bạn. Lí do: "' + req.body.reasonHost + '"',
+      imageHoust: dataProduct.images[0],
+      date: date + "/" + month + "/" + year,
+      time: hours + ":" + minutes+ ":" +seconds
+    }
+    const saveOrder = await new noti(dataNewNoti).save()
+    res.status(200).json({
+      messege: true,
+      data: saveOrder
+    })
+
+  } catch (error) {
+    res.status(401).json({
+      messege: false
+    })
+  }
+}
+
+export const createNotiAccessCancel = async (req, res) => {
+  let ts = Date.now();
+  let date_ob = new Date(ts);
+  let date = date_ob.getDate();
+  let month = date_ob.getMonth() + 1;
+  let year = date_ob.getFullYear();
+  let hours = date_ob.getHours();
+  let minutes = date_ob.getMinutes();
+  let seconds = date_ob.getSeconds();
+  try {
+    const dataOrder = await order.findOne({
+      IdOder: req.body.id
+    })
+
+    const dataProduct = await product.findOne({
+      _id: dataOrder.IdPro
+    })
+
+    const dataNewNoti = {
+      idOder: dataOrder.IdOder,
+      idUser: dataOrder.IdUser,
+      title: 'Xác nhận huỷ phòng',
+      content: 'Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi, Chủ phòng ' + dataProduct.name + ' ý kiến của bạn sẽ là động lực cho chúng tôi phát triển và hoàn thiện hơn',
+      imageHoust: dataProduct.images[0],
+      date: date + "/" + month + "/" + year,
+      time: hours + ":" + minutes+ ":" +seconds
+    }
+    const saveOrder = await new noti(dataNewNoti).save()
+    res.status(200).json({
+      messege: true,
+      data: saveOrder
+    })
+
+  } catch (error) {
+    res.status(401).json({
+      messege: false
+    })
+  }
+}
+
+export const createNotiSuccess = async (req, res) => {
+  let ts = Date.now();
+  let date_ob = new Date(ts);
+  let date = date_ob.getDate();
+  let month = date_ob.getMonth() + 1;
+  let year = date_ob.getFullYear();
+  let hours = date_ob.getHours();
+  let minutes = date_ob.getMinutes();
+  let seconds = date_ob.getSeconds();
+  try {
+    const dataOrder = await order.findOne({
+      IdOder: req.body.id
+    })
+
+    const dataProduct = await product.findOne({
+      _id: dataOrder.IdPro
+    })
+
+    const dataNewNoti = {
+      idOder: dataOrder.IdOder,
+      idUser: dataOrder.IdUser,
+      title: 'Hoàn tất',
+      content: 'Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi, Chủ phòng ' + dataProduct.name + ' ý kiến của bạn sẽ là động lực cho chúng tôi phát triển và hoàn thiện hơn',
+      imageHoust: dataProduct.images[0],
+      date: date + "/" + month + "/" + year,
+      time: hours + ":" + minutes+ ":" +seconds
+    }
+    const saveOrder = await new noti(dataNewNoti).save()
+    res.status(200).json({
+      messege: true,
+      data: saveOrder
+    })
+
+  } catch (error) {
+    res.status(401).json({
+      messege: false
+    })
+  }
+}
+
+export const listNotificationByUser = async (req, res) => {
+  try {
+    const dataNoti= await noti.find({
+      idUser: req.params.id
+    })
+    res.status(200).json({
+      messege: true,
+      data: dataNoti.reverse()
+    })
+
+  } catch (error) {
+    res.status(401).json({
+      messege: false
+    })
+  }
 }
