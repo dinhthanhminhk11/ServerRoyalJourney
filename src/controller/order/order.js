@@ -1002,3 +1002,23 @@ export const listNotificationByUser = async (req, res) => {
     })
   }
 }
+
+export const updateNotiSeen = async (req , res) =>{
+  try {
+    const dataNoti = await noti.findOneAndUpdate(
+      { idOder: req.params.id },
+      { isSeem: false },
+      { new: true }
+    )
+    res.status(200).json({
+      status: true,
+      message: 'Update success',
+    })
+
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      message: 'Update faild',
+    })
+  }
+}
