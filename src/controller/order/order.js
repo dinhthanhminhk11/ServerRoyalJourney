@@ -109,7 +109,7 @@ export const ListOrder = async (req, res) => {
         messege: true,
         data: dataCompile.sort((a, b) => {
           return a.time.getTime() - b.time.getTime()
-        }),
+        }).reverse(),
       })
     }, 1000)
   } catch (error) {
@@ -1006,7 +1006,7 @@ export const listNotificationByUser = async (req, res) => {
 export const updateNotiSeen = async (req , res) =>{
   try {
     const dataNoti = await noti.findOneAndUpdate(
-      { idOder: req.params.id },
+      { _id: req.params.id },
       { isSeem: false },
       { new: true }
     )
@@ -1017,6 +1017,25 @@ export const updateNotiSeen = async (req , res) =>{
 
   } catch (error) {
     res.status(400).json({
+      status: false,
+      message: 'Update faild',
+    })
+  }
+}
+
+export const listNotibyUserIdNotSeem = async (req , res) =>{
+  try {
+    const dataNoti= await noti.find({
+      idUser: req.params.id,
+      isSeem: true
+    })
+    res.status(200).json({
+      status: true,
+      size: dataNoti.length,
+    })
+
+  } catch (error) {
+    res.status(401).json({
       status: false,
       message: 'Update faild',
     })
