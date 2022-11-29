@@ -7,14 +7,14 @@ export const loginUser = async (req, res) => {
   try {
     const checkEmail = await user.findOne({ email: req.body.email, role: 0 })
    
-    if (!checkEmail) return res.status(404).json(
+    if (!checkEmail) return res.status(200).json(
       {
         status: 'false',
         message: "Email chưa được đăng kí",
       }
     )
     const checkPass = bcyrpt.compareSync(req.body.password, checkEmail.password)
-    if (!checkPass) return res.status(400).json({
+    if (!checkPass) return res.status(200).json({
       status: 'false',
       message: "Tài khoản hoặc mật khẩu không chính xác",
     })
