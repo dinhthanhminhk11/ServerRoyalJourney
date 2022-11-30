@@ -30,7 +30,8 @@ import {
   createNotiAccess,
   listNotificationByUser,
   updateNotiSeen,
-  listNotibyUserIdNotSeem
+  listNotibyUserIdNotSeem,
+  listProductAccessByUserId
 } from '../controller/order/order'
 const router = Router()
 router.route('/addorder').post(createOrder)
@@ -69,4 +70,5 @@ router.route('/listNotificationByUser/:id').get(listNotificationByUser)
 router.route('/listNotibyUserIdNotSeem/:id').get(listNotibyUserIdNotSeem)
 router.route('/updateNotiSeen/:id').patch(updateNotiSeen)
 
+router.route('/listProductAccessByUserId/:id').get(listProductAccessByUserId)
 export default router

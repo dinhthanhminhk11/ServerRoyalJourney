@@ -1041,3 +1041,19 @@ export const listNotibyUserIdNotSeem = async (req , res) =>{
     })
   }
 }
+
+export const listProductAccessByUserId = async (req , res) =>{
+  try {
+    const data = await order.find({ IdUser: req.params.id , checkedOut : true })
+
+
+    res.status(200).json({
+      messege: true,
+      data: data
+    })
+  } catch (error) {
+     res.status(404).json({
+      messege: false,
+    })
+  }
+}

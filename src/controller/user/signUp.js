@@ -9,7 +9,7 @@ export const createUser = async (req, res) => {
   try {
     const checkEmail = await user.findOne({ email: req.body.email , role: 0 })
     if (checkEmail) {
-      return res.status(400).json({
+      return res.status(200).json({
         status: "false",
         message: 'Email đã tồn tại',
         email: checkEmail.email,
