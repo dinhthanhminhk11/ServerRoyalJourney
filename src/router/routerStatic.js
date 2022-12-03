@@ -1,6 +1,12 @@
 import { Router } from 'express'
 import {
-    getTimeOrder,
+    getCountTimeOrder,
+    getPriceDayOrder,
+    getPriceMonthOrder,
+    getPriceOrder,
+    getPriceOrderWaiting,
+    getPriceWeekOrder,
+    getPriceYearOrder,
     totalOrder,
     totalOrderFail,
     totalOrderFinish,
@@ -12,5 +18,11 @@ router.get('/totalOrder/:IdHost', totalOrder)
 router.get('/totalOrderFinish/:IdHost', totalOrderFinish)
 router.get('/totalOrderProcess/:IdHost', totalOrderProcess)
 router.get('/totalOrderFail/:IdHost', totalOrderFail)
-router.get('/getTimeOrder/:IdHost', getTimeOrder)
+router.get('/getTimeOrder/:IdHost', getCountTimeOrder)
+router.get('/getPriceDayOrder/:IdHost', getPriceDayOrder)
+router.get('/getPriceWeekOrder/:IdHost', getPriceWeekOrder)
+router.get('/getPriceMonthOrder/:IdHost', getPriceMonthOrder)
+router.get('/getPriceYearOrder/:IdHost', getPriceYearOrder)
+router.get('/getPriceWaiting/:IdHost', getPriceOrderWaiting)
+router.get('/getPriceOrder/:IdHost&:startDay&:endDay', getPriceOrder)
 export default router
