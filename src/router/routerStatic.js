@@ -26,4 +26,5 @@ router.get('/getPriceMonthOrder/:IdHost', getPriceMonthOrder)
 router.get('/getPriceYearOrder/:IdHost', getPriceYearOrder)
 router.get('/getPriceWaiting/:IdHost', getPriceOrderWaiting)
 router.get('/getPriceOrder/:IdHost&:startDay&:endDay', getPriceOrder)
+
 export default router

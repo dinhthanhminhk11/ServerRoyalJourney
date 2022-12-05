@@ -203,7 +203,6 @@ export const getPriceYearOrder = async (req, res) => {
 }
 
 export const getPriceOrder= async (req, res) => {
-    //2022-12-04
     try {
         let startDate= new Date(req.params.startDay)
         startDate.setUTCHours(0,0,0,0)

@@ -19,6 +19,6 @@ router.delete('/deleteProduct/:id', deleteProduct)
 router.get('/updateSao/:id&:sao', updateSaoProduct)
 router.get('/listFilterProduct/:startPrice&:endPrice&:sao&:idCategory', filterProducts)
 router.get('/listSearchProduct/:nameLocation', searchProducts)
-router.put('/updateProduct', updateProduct)
+router.post('/updateProduct', updateProduct)
 
 export default router

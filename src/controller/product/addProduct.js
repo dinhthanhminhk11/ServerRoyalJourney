@@ -27,7 +27,8 @@ export const addProduct = async (req, res) => {
       startDate:  req.body.startDate,
       endDate:  req.body.endDate,
       isStillEmpty: false,
-      cancellatioDate: req.body.cancellatioDate
+      cancellatioDate: req.body.cancellatioDate,
+      sao:5
     }
     const data = await product(dataSave).save()
     res.status(200).json({
