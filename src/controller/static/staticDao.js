@@ -2,27 +2,40 @@ import order from "../../models/order";
 
 const start = new Date()
 const end = new Date()
-start.setHours(0, 0, 0, 0)
-end.setHours(23, 59, 59, 999)
-const curr = new Date()
-const first = new Date(curr.setDate(curr.getDate()+2 - curr.getDay()));
-first.setHours(0,0,0,0)
-const last = new Date(curr.setDate(curr.getDate() - curr.getDay()+7));
-last.setHours(23,59,59,999)
+start.setUTCHours(0, 0, 0, 0)
+end.setUTCHours(23, 59, 59, 999)
 
+const startAfter = new Date()
+const endAfter = new Date()
+startAfter.setUTCHours(0, 0, 0, 0)
+endAfter.setUTCHours(23, 59, 59, 999)
+startAfter.setDate(startAfter.getDate()-1)
+endAfter.setDate(endAfter.getDate()-1)
+
+
+const curr = new Date()
 const firstMonth = new Date(curr.getFullYear(), curr.getMonth(), 2);
-firstMonth.setHours(0,0,0,0)
+firstMonth.setUTCHours(0,0,0,0)
 const lastMonth = new Date(curr.getFullYear(), curr.getMonth() + 1, 0);
-lastMonth.setHours(23,59,59,999)
+lastMonth.setUTCHours(23,59,59,999)
 
 
 const firstYear = new Date(curr.getFullYear(),0,2);
-firstYear.setHours(0,0,0,0)
+firstYear.setUTCHours(0,0,0,0)
 const lastYear= new Date(curr.getFullYear(),12,0);
-lastYear.setHours(23,59,59,999)
+lastYear.setUTCHours(23,59,59,999)
 
 const a = Date.parse(start.toString())
 const b = Date.parse(end.toString())
+
+
+const dt = new Date();  //current date of week
+const currentWeekDay = dt.getDay();
+const lessDays = currentWeekDay === 0 ? 6 : currentWeekDay - 1;
+const wkStart = new Date(new Date(dt).setDate(dt.getDate() - lessDays));
+wkStart.setUTCHours(0,0,0,0)
+const wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6));
+wkEnd.setUTCHours(23,59,99,999)
 export const totalOrder = async (req, res) => {
     try {
         const data = await order.count({IdHost: req.params.IdHost})
@@ -115,10 +128,27 @@ export const getPriceDayOrder = async (req, res) => {
     }
 }
 
+export const getPriceLastDayOrder = async (req, res) => {
+    try {
+        const data = await order.find({
+            IdHost: req.params.IdHost,
+            status: 'Đã trả phòng',
+            createdAt: {$gte: Date.parse(startAfter), $lt: Date.parse(endAfter)}
+        },{price:1})
+        res.json({
+            data
+        })
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
+
 export const getPriceWeekOrder = async (req, res) => {
     try {
-        const aWeek = Date.parse(first.toString())
-        const bWeek = Date.parse(last.toString())
+        const aWeek = Date.parse(wkStart.toString())
+        const bWeek = Date.parse(wkEnd.toString())
         const data = await order.find({
             IdHost: req.params.IdHost,
             status: 'Đã trả phòng',
@@ -173,11 +203,16 @@ export const getPriceYearOrder = async (req, res) => {
 }
 
 export const getPriceOrder= async (req, res) => {
+    //2022-12-04
     try {
+        let startDate= new Date(req.params.startDay)
+        startDate.setUTCHours(0,0,0,0)
+        let endDate= new Date(req.params.endDay)
+        endDate.setUTCHours(23,59,59,999)
         const data = await order.find({
             IdHost: req.params.IdHost,
             status: 'Đã trả phòng',
-            createdAt: {$gte: Date.parse(req.params.startDay), $lt: Date.parse(req.params.endDay)}
+            createdAt: {$gte: Date.parse(startDate), $lt: Date.parse(endDate)}
         },{price:1})
         res.json({
             data
