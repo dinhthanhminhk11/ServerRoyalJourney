@@ -8,7 +8,7 @@ import {
     getProductsHost,
     searchProducts
 } from '../controller/product/findProduct'
-import {updateProduct, updateSaoProduct} from "../controller/product/updateProduct";
+import {getProductsId, updateProduct, updateSaoProduct} from "../controller/product/updateProduct";
 
 const router = Router()
 router.route('/listProduct').get(getProducts)
