@@ -228,3 +228,32 @@ export const updateInfoUser = async (req , res) =>{
     })
   }
 }
+
+export const updatePassword = async (req , res) =>{
+  try {
+    const checkEmail = await user.findOne({ _id: req.body.id })
+    const checkPass = bcyrpt.compareSync(req.body.password, checkEmail.password)
+    if (!checkPass) return res.status(200).json({
+      status: 'false',
+      message: "Mật khẩu cũ không đúng",
+    })
+
+    const passHass = bcyrpt.hashSync(req.body.passwordNew, 10)
+    const dataUserUpdate = await user.findOneAndUpdate(
+      { _id: req.body.id },
+      { 
+        password: passHass,
+      },
+      { new: true }
+    )
+    return  res.status(200).json({
+      status: true,
+      message: 'Thay đổi thành công'
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      message: 'User không tồn tại',
+    })
+  }
+}
