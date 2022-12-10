@@ -237,7 +237,6 @@ export const updatePassword = async (req , res) =>{
       status: 'false',
       message: "Mật khẩu cũ không đúng",
     })
-
     const passHass = bcyrpt.hashSync(req.body.passwordNew, 10)
     const dataUserUpdate = await user.findOneAndUpdate(
       { _id: req.body.id },
