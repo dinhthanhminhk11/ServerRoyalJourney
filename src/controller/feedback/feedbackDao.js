@@ -1,6 +1,7 @@
 import feedBack from "../../models/feedBack";
 import req from "express/lib/request";
 import res from "express/lib/response";
+import User from "../../models/user";
 
 export const addFeedBack = async (req, res) => {
     try {
@@ -9,6 +10,7 @@ export const addFeedBack = async (req, res) => {
             idHouse: req.body.idHouse,
             imgUser: req.body.imgUser,
             name: req.body.name,
+            email: req.body.email,
             sao: req.body.sao,
             time: req.body.time,
             textUser: req.body.textUser,
@@ -87,6 +89,19 @@ export const listIdUser = async (req, res) => {
         const listIdUser = await feedBack.find({idHouse: req.params.idHouse}, {idUser: 1})
         res.status(200).json({
             data: listIdUser
+        })
+    } catch (error) {
+        res.status(401).json({
+            error
+        })
+    }
+}
+
+export const getUser = async (req, res) => {
+    try {
+        const getUser = await User.find({_id: req.params.idUser}, {email: 1})
+        res.status(200).json({
+            data: getUser
         })
     } catch (error) {
         res.status(401).json({

@@ -15,6 +15,9 @@ const feedBackSchema = mongoose.Schema(
         name:{
             type:String
         },
+        email:{
+            type:String
+        },
         sao:{
             type: Number
         },
