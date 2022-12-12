@@ -851,7 +851,7 @@ export const createNotiAccess = async (req, res) => {
       content: 'Yêu cầu đặt phòng của bạn đã được ' + dataProduct.name + ' chấp nhận',
       imageHoust: dataProduct.images[0],
       date: date + "/" + month + "/" + year,
-      time: hours + ":" + minutes+ ":" +seconds
+      time: hours + ":" + minutes + ":" + seconds
     }
     const saveOrder = await new noti(dataNewNoti).save()
     res.status(200).json({
@@ -891,7 +891,7 @@ export const createNotiCancel = async (req, res) => {
       content: 'Chủ phòng ' + dataProduct.name + ' đã từ chối bạn. Lí do: "' + req.body.reasonHost + '"',
       imageHoust: dataProduct.images[0],
       date: date + "/" + month + "/" + year,
-      time: hours + ":" + minutes+ ":" +seconds
+      time: hours + ":" + minutes + ":" + seconds
     }
     const saveOrder = await new noti(dataNewNoti).save()
     res.status(200).json({
@@ -931,7 +931,7 @@ export const createNotiAccessCancel = async (req, res) => {
       content: 'Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi, Chủ phòng ' + dataProduct.name + ' ý kiến của bạn sẽ là động lực cho chúng tôi phát triển và hoàn thiện hơn',
       imageHoust: dataProduct.images[0],
       date: date + "/" + month + "/" + year,
-      time: hours + ":" + minutes+ ":" +seconds
+      time: hours + ":" + minutes + ":" + seconds
     }
     const saveOrder = await new noti(dataNewNoti).save()
     res.status(200).json({
@@ -971,7 +971,7 @@ export const createNotiSuccess = async (req, res) => {
       content: 'Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi, Chủ phòng ' + dataProduct.name + ' ý kiến của bạn sẽ là động lực cho chúng tôi phát triển và hoàn thiện hơn',
       imageHoust: dataProduct.images[0],
       date: date + "/" + month + "/" + year,
-      time: hours + ":" + minutes+ ":" +seconds
+      time: hours + ":" + minutes + ":" + seconds
     }
     const saveOrder = await new noti(dataNewNoti).save()
     res.status(200).json({
@@ -988,7 +988,7 @@ export const createNotiSuccess = async (req, res) => {
 
 export const listNotificationByUser = async (req, res) => {
   try {
-    const dataNoti= await noti.find({
+    const dataNoti = await noti.find({
       idUser: req.params.id
     })
     res.status(200).json({
@@ -1003,7 +1003,7 @@ export const listNotificationByUser = async (req, res) => {
   }
 }
 
-export const updateNotiSeen = async (req , res) =>{
+export const updateNotiSeen = async (req, res) => {
   try {
     const dataNoti = await noti.findOneAndUpdate(
       { _id: req.params.id },
@@ -1023,9 +1023,9 @@ export const updateNotiSeen = async (req , res) =>{
   }
 }
 
-export const listNotibyUserIdNotSeem = async (req , res) =>{
+export const listNotibyUserIdNotSeem = async (req, res) => {
   try {
-    const dataNoti= await noti.find({
+    const dataNoti = await noti.find({
       idUser: req.params.id,
       isSeem: true
     })
@@ -1042,9 +1042,9 @@ export const listNotibyUserIdNotSeem = async (req , res) =>{
   }
 }
 
-export const listProductAccessByUserId = async (req , res) =>{
+export const listProductAccessByUserId = async (req, res) => {
   try {
-    const data = await order.find({ IdUser: req.params.id , checkedOut : true })
+    const data = await order.find({ IdUser: req.params.id, checkedOut: true })
 
 
     res.status(200).json({
@@ -1052,8 +1052,28 @@ export const listProductAccessByUserId = async (req , res) =>{
       data: data
     })
   } catch (error) {
-     res.status(404).json({
+    res.status(404).json({
       messege: false,
+    })
+  }
+}
+
+export const getHouseResponseByServer = async (req, res) => {
+  try {
+    let ts = Date.now();
+    let date_ob = new Date(ts);
+    let date = date_ob.getDate();
+    let month = date_ob.getMonth() + 1;
+    let year = date_ob.getFullYear();
+    let hours = date_ob.getHours();
+    let minutes = date_ob.getMinutes();
+    let seconds = date_ob.getSeconds();
+
+    const data = date + "/" + month + "/" + year
+    res.status(200).json(data)
+  } catch (error) {
+    res.status(400).json({
+      error
     })
   }
 }
