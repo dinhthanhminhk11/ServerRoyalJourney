@@ -89,6 +89,7 @@ export const ListOrder = async (req, res) => {
         seem: item.seem,
         startDate: item.startDate,
         endDate: item.endDate,
+        reasonUser:item.reasonUser,
         person: item.person,
         phone: item.phone,
         status: item.status,
