@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
   },
   otp: {
     type: String,
-    required: true,
+    required: false,
   },
   active: {
     type: Boolean,
@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
   },
   otpResetPass: {
     type: String,
-    required: true,
+    required: false,
   } ,
   countBooking: {
     type: Number,
