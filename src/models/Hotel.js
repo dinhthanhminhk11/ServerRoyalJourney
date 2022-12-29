@@ -45,6 +45,9 @@ const HotelSchema = mongoose.Schema(
         mota:{
             type: String
         },
+        chinhsach:{
+           type: String
+        },
         yte: {
             type: Boolean
         }

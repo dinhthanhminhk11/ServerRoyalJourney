@@ -16,7 +16,8 @@ export const addHotel = async (req, res) => {
       yte: req.body.yte,
       longitude: req.body.longitude,
       latitude: req.body.latitude,
-      mota: req.body.mota
+      mota: req.body.mota,
+      chinhsach: req.body.chinhsach
     }
     const data = await hotel(dataSave).save()
     res.status(200).json({

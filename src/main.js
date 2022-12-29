@@ -15,8 +15,9 @@ import FeedBack from './router/routerFeedBack'
 import Static from  './router/routerStatic'
 import Hotel from "./router/routerHotel";
 import Phong from "./router/routerPhong";
+import TienNghiKs from "./router/routerTienNghi";
 import socket from 'socket.io'
-import phong from "./models/Phong";
+
 const app = express()
 app.use(express.json())
 app.use(cors())
@@ -45,6 +46,8 @@ app.use('/api', FeedBack)
 app.use('/api',Static)
 app.use('/api',Hotel)
 app.use('/api',Phong)
+app.use('/api',TienNghiKs)
+
 const server =  app.listen(process.env.PORT, () => {
   console.log(`connected port ${process.env.PORT}`)
 })
