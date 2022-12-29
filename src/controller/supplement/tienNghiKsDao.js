@@ -31,17 +31,17 @@ export const getAllTienNghiKS = async (req, res) => {
         })
     }
 }
-// export const getListSupplementById = async (req, res) => {
-//   try {
-//     const data = await tiennghiks.findOne({ _id: req.body.id }).exec()
-//     res.status(200).json({
-//       message: 'true',
-//       dataSupplements: data,
-//     })
-//   } catch (error) {
-//     res.status(400).json({
-//       // error
-//       message: 'false',
-//     })
-//   }
-// }
+export const getListTienNghiKsById = async (req, res) => {
+  try {
+    const data = await tiennghiks.findOne({ _id: req.body.id }).exec()
+    res.status(200).json({
+      message: 'true',
+      dataSupplements: data,
+    })
+  } catch (error) {
+    res.status(400).json({
+      // error
+      message: 'false',
+    })
+  }
+}

@@ -44,6 +44,19 @@ export const getHotelHost = async (req, res) => {
         })
     }
 }
+export const deleteHotelHost = async (req, res) => {
+    try {
+        const data = await hotel.deleteOne({_id: req.params.id})
+        res.status(200).json({
+            message: 'true',
+        })
+    } catch (error) {
+        res.status(400).json({
+            // error
+            message: 'false',
+        })
+    }
+}
 
 // export const filterProducts = async (req, res) => {
 //     try {
