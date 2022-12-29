@@ -46,6 +46,14 @@ const userSchema = new mongoose.Schema({
   },
   tokenDevice: {
     type: String
+  },
+  passCashFlow:{
+    type: String,
+    default : ""
+  },
+  priceCashFlow: {
+    type:String,
+    default: "0"
   }
 })
 export default mongoose.model('user', userSchema)
