@@ -31,7 +31,7 @@ import phong from "../../models/Phong";
 //         })
 //     }
 // }
-export const getPhongById = async (req, res) => {
+export const getPhongByIdHotel = async (req, res) => {
     try {
         const data = await phong.find({idHotel: req.params.idHotel})
         res.status(200).json({
@@ -42,6 +42,21 @@ export const getPhongById = async (req, res) => {
         res.status(400).json({
             // error
             message: 'false',
+        })
+    }
+}
+export const getPhongById = async (req, res) => {
+    const filter = {_id: req.params.id}
+    try {
+        const data = await phong
+            .findById(filter)
+        res.status(200).json(
+            data
+        )
+    } catch (error) {
+        res.status(400).json({
+            // error
+            message: error,
         })
     }
 }

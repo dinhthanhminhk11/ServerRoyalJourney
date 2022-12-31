@@ -23,3 +23,17 @@ export const addPhong = async (req, res) => {
     })
   }
 }
+
+export const deletePhong = async (req, res) => {
+  try {
+    const data = await phong.deleteOne({_id: req.params.id})
+    res.status(200).json({
+      message: 'true',
+    })
+  } catch (error) {
+    res.status(400).json({
+      // error
+      message: 'false',
+    })
+  }
+}

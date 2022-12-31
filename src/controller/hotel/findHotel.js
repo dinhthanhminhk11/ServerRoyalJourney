@@ -1,21 +1,21 @@
 import hotel from '../../models/Hotel'
 import user from "../../models/user";
 
-// export const getHotelById = async (req, res) => {
-//     const filter = {_id: req.params.id}
-//     try {
-//         const data = await hotel
-//             .findById(filter)
-//         res.status(200).json(
-//             data
-//         )
-//     } catch (error) {
-//         res.status(400).json({
-//             // error
-//             message: error,
-//         })
-//     }
-// }
+export const getHotelById = async (req, res) => {
+    const filter = {_id: req.params.id}
+    try {
+        const data = await hotel
+            .findById(filter)
+        res.status(200).json(
+            data
+        )
+    } catch (error) {
+        res.status(400).json({
+            // error
+            message: error,
+        })
+    }
+}
 export const getAllHotel = async (req, res) => {
     try {
         const data = await hotel.find()
