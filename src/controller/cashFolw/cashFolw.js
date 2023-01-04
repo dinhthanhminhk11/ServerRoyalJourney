@@ -10,32 +10,39 @@ export const createCashFlow = async (req, res) => {
     let hours = date_ob.getHours();
     let minutes = date_ob.getMinutes();
     try {
-        const check = req.body.status
-        const dataUser = user.findOne({
+        var check = req.body.status
+        const dataUser = await user.findById({
             _id: req.body.idUser
         })
         var priceCashFlow = parseInt(dataUser.priceCashFlow)
+
+        console.log(dataUser.priceCashFlow + " tiền cũ ")
         if (check) {
-            dataUser.findOneAndUpdate(
+            console.log("check")
+            const userUpdate1 = await user.findOneAndUpdate(
                 { _id: req.body.idUser },
-                { priceCashFlow: priceCashFlow += parseInt(req.body.price) },
+                { priceCashFlow: (priceCashFlow += parseInt(req.body.price)).toString() },
                 { new: true }
             )
         } else {
-            dataUser.findOneAndUpdate(
+            console.log("check2")
+
+            const userUpdate2 = await user.findOneAndUpdate(
                 { _id: req.body.idUser },
-                { priceCashFlow: priceCashFlow -= parseInt(req.body.price) },
+                { priceCashFlow: (priceCashFlow -= parseInt(req.body.price)).toString() },
                 { new: true }
             )
         }
+
+        console.log(dataUser.priceCashFlow + " tiền mới ")
+
 
         const dataCashFlow = {
             idUser: req.body.idUser,
             title: req.body.title,
             content: req.body.content,
             price: req.body.price,
-            imageHoust: dataProduct.images[0],
-            dateTime: hours + ":" + minutes + " " + date + "/" + month + "/" + year,
+            dateTime: hours + ":" + minutes + " " + date + "-" + month + "-" + year,
             status: req.body.status
         }
         const saveCashFlow = await new cash(dataCashFlow).save()
@@ -46,6 +53,7 @@ export const createCashFlow = async (req, res) => {
         })
 
     } catch (error) {
+        console.log(error)
         res.status(401).json({
             status: false,
             message: "Thêm thất bại"
@@ -58,9 +66,9 @@ export const listCashFlow = async (req, res) => {
         const data = await cash.find({
             'idUser': req.params.id
         })
-        res.status(200).json(data)
+        res.status(200).json(data.reverse())
     } catch (error) {
-        res.status(401).json({
+        res.status(404).json({
             status: false,
         })
     }

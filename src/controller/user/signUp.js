@@ -256,3 +256,14 @@ export const updatePassword = async (req , res) =>{
     })
   }
 }
+
+export const getCash = async (req , res) =>{
+  try{
+    const userData = await user.findOne({ _id: req.params.id })
+    res.status(200).json(userData.priceCashFlow)
+  }catch (error) {
+    res.status(400).json({
+            error
+        })
+  }
+}

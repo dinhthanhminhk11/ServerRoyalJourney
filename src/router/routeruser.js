@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { loginUser, loginHost, loginAdmin , isModerator  , verifyToken} from '../controller/user/signIn'
-import { createHost, createUser , verifyEmail , sendAgain , checkEmailForgot , validateUserPass , newPass , updateCheckTokenDevice , updateInfoUser,updatePassword} from '../controller/user/signUp'
+import { createHost, createUser , verifyEmail , sendAgain , checkEmailForgot , validateUserPass , newPass , updateCheckTokenDevice , updateInfoUser,updatePassword,getCash} from '../controller/user/signUp'
 import { nearByUserLocation,nearByUserLocationAllCategory , moderatorBoard  } from '../controller/product/userLocationNearBy'
 const router = Router()
 router.route('/signup').post(createUser)
@@ -22,4 +22,5 @@ router.route('/updateCheckTokenDevice').post(updateCheckTokenDevice)
 router.route('/updateInfoUser').patch(updateInfoUser)
 
 router.route('/updatePassword').patch(updatePassword)
+router.route('/getCash/:id').get(getCash)
 export default router

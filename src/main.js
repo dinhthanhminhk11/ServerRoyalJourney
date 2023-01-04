@@ -17,7 +17,7 @@ import Hotel from "./router/routerHotel";
 import Phong from "./router/routerPhong";
 import tienNghi from "./router/routerTienNghi";
 import socket from 'socket.io'
-
+import cashFlow from "./router/routerCashFlow";
 import phong from "./models/Phong";
 const app = express()
 app.use(express.json())
@@ -48,6 +48,7 @@ app.use('/api',Static)
 app.use('/api',Hotel)
 app.use('/api',Phong)
 app.use('/api',tienNghi)
+app.use('/api',cashFlow)
 const server =  app.listen(process.env.PORT, () => {
   console.log(`connected port ${process.env.PORT}`)
 })
