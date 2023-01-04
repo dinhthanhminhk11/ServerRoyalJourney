@@ -32,11 +32,18 @@ const HotelSchema = mongoose.Schema(
         },
         TienNghiKS: Array,
 
-        longitude:{
-            type:String
-        },
-        latitude:{
-            type: String
+        // longitude:{
+        //     type:String
+        // },
+        // latitude:{
+        //     type: String
+        // },
+        location: {
+            type: {
+                type: String,
+                required: true,
+            },
+            coordinates: [],
         },
         TbSao: {
             type : Number,
@@ -54,5 +61,5 @@ const HotelSchema = mongoose.Schema(
 
     }
 )
-
+HotelSchema.index({location: '2dsphere'})
 export default mongoose.model("Hotel" , HotelSchema)

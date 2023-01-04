@@ -28,8 +28,15 @@ export const updateHotel = async (req, res) => {
       timeTra: req.body.timeTra,
       TienNghiKS: req.body.TienNghiKS,
       yte: req.body.yte,
-      longitude: req.body.longitude,
-      latitude: req.body.latitude,
+      location: {
+        type: 'Point',
+        coordinates: [
+          parseFloat(req.body.longitude),
+          parseFloat(req.body.latitude),
+        ],
+      },
+      // longitude: req.body.longitude,
+      // latitude: req.body.latitude,
       mota: req.body.mota,
       chinhsach: req.body.chinhsach
     }

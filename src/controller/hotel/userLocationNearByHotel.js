@@ -1,36 +1,35 @@
 import hotel from '../../models/Hotel'
+import product from "../../models/product";
+
 export const nearByUserLocation = async (req, res) => {
-  try {
-    const data = await hotel.aggregate([
-      {
-        $geoNear: {
-          near: {
-             longitude: parseFloat(req.body.longitude),
-             latitude: parseFloat(req.body.latitude),
-          },
-          maxDistance: parseInt(req.body.dist),
-          distanceField: 'calculated',
-          spherical: true,
-        },
-      },
-    ])
-    res.status(200).json({
-      messege: 'true',
-      dataMaps: data.map((item) => {
-        return {
-          data: item,
-          distance: Math.ceil(item.calculated / 1000),
-        }
-      }),
-    })
-  } catch (error) {
-    res.status(400).json({
-      messege: 'false',
-    })
-  }
+    try {
+        const data = await hotel.aggregate([
+            {
+                $geoNear: {
+                    near: {
+                        type: "Point", coordinates: [
+                            parseFloat(req.body.longitude),
+                            parseFloat(req.body.latitude),
+                        ]
+                    },
+                    maxDistance: parseInt(req.body.dist),
+                    distanceField: 'calculated',
+                    spherical: true,
+                },
+            },
+        ])
+        res.status(200).json({
+            messege: 'true',
+            data: data,
+        })
+    } catch (error) {
+        res.status(400).json({
+            messege: error,
+        })
+    }
 }
 
 export const moderatorBoard = (req, res) => {
-  res.status(200).send("User Content.");
+    res.status(200).send("User Content.");
 };
 
