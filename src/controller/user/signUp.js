@@ -267,3 +267,37 @@ export const getCash = async (req , res) =>{
         })
   }
 }
+
+export const getPassPin = async (req , res) =>{
+  try{
+    const userData = await user.findOne({ _id: req.params.id })
+    res.status(200).json(userData.passCashFlow)
+  }catch (error) {
+    res.status(400).json({
+            error
+        })
+  }
+}
+
+export const createPinPass = async (req , res) =>{
+  try {
+    const dataUser = await user.findOne({ _id: req.body.id })
+    
+    const dataUserUpdate = await user.findOneAndUpdate(
+      { _id: req.body.id },
+      { 
+        passCashFlow: req.body.passCashFlow,
+      },
+      { new: true }
+    )
+    return  res.status(200).json({
+      status: true,
+      message: 'Thay đổi thành công'
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      message: 'User không tồn tại',
+    })
+  }
+}

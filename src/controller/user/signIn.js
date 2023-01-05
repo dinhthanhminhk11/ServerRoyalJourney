@@ -20,7 +20,7 @@ export const loginUser = async (req, res) => {
     })
 
     var token = jwt.sign({ id: checkEmail.id }, config.secret, {
-      expiresIn: 86400 // 24 hours
+      // expiresIn: 86400 // 24 hours
     });
 
     res.status(200).json({
