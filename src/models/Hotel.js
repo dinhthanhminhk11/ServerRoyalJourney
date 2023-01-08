@@ -30,6 +30,9 @@ const HotelSchema = mongoose.Schema(
         timeTra:{
             type: String
         },
+        giaDaoDong: {
+            type:String
+        },
         TienNghiKS: Array,
 
         // longitude:{
@@ -49,6 +52,7 @@ const HotelSchema = mongoose.Schema(
             type : Number,
             default: 5
         },
+        imageConfirm: [],
         mota:{
             type: String
         },
@@ -57,6 +61,16 @@ const HotelSchema = mongoose.Schema(
         },
         yte: {
             type: Boolean
+        },
+        treEm: {
+            type:Number
+        },
+        chinhSachHuy: {
+            type: Boolean
+        },
+        checkConfirm:{
+            type: Boolean,
+            default: false
         }
 
     }

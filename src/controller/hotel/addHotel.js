@@ -14,6 +14,8 @@ export const addHotel = async (req, res) => {
       timeTra: req.body.timeTra,
       TienNghiKS: req.body.TienNghiKS,
       yte: req.body.yte,
+      giaDaoDong: req.body.giaDaoDong,
+      imageConfirm: req.body.imageConfirm,
       location: {
         type: 'Point',
         coordinates: [
@@ -21,10 +23,11 @@ export const addHotel = async (req, res) => {
           parseFloat(req.body.latitude),
         ],
       },
-      // longitude: req.body.longitude,
-      // latitude: req.body.latitude,
       mota: req.body.mota,
-      chinhsach: req.body.chinhsach
+      chinhsach: req.body.chinhsach,
+      treEm: req.body.treEm,
+      chinhSachHuy: req.body.chinhSachHuy
+
     }
     const data = await hotel(dataSave).save()
     res.status(200).json({

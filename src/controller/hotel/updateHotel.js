@@ -27,6 +27,8 @@ export const updateHotel = async (req, res) => {
       timeDat: req.body.timeDat,
       timeTra: req.body.timeTra,
       TienNghiKS: req.body.TienNghiKS,
+      giaDaoDong: req.body.giaDaoDong,
+      imageConfirm: req.body.imageConfirm,
       yte: req.body.yte,
       location: {
         type: 'Point',
@@ -38,7 +40,9 @@ export const updateHotel = async (req, res) => {
       // longitude: req.body.longitude,
       // latitude: req.body.latitude,
       mota: req.body.mota,
-      chinhsach: req.body.chinhsach
+      chinhsach: req.body.chinhsach,
+      treEm: req.body.treEm,
+      chinhSachHuy: req.body.chinhSachHuy
     }
     const dataUpdate = await hotel.updateOne({_id:req.body._id}, dataSave)
     res.status(200).json({

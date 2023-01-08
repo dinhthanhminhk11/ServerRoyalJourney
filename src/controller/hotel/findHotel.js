@@ -30,6 +30,21 @@ export const getAllHotel = async (req, res) => {
         })
     }
 }
+
+export const getAllHotelConfirm = async (req, res) => {
+    try {
+        const data = await hotel.find({checkConfirm:true})
+        res.status(200).json({
+            message: 'true',
+            datapros: data,
+        })
+    } catch (error) {
+        res.status(400).json({
+            // error
+            message: 'false',
+        })
+    }
+}
 export const getHotelHost = async (req, res) => {
     try {
         const data = await hotel.find({idUser: req.params.idUser})

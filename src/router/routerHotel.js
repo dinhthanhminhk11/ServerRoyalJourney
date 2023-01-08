@@ -1,6 +1,12 @@
 import { Router } from 'express'
 import {addHotel} from '../controller/hotel/addHotel'
-import {deleteHotelHost, getAllHotel, getHotelById, getHotelHost} from "../controller/hotel/findHotel";
+import {
+    deleteHotelHost,
+    getAllHotel,
+    getAllHotelConfirm,
+    getHotelById,
+    getHotelHost
+} from "../controller/hotel/findHotel";
 import {updateHotel, updateSaoHotel} from "../controller/hotel/updateHotel";
 import {nearByUserLocation} from "../controller/hotel/userLocationNearByHotel";
 
@@ -10,6 +16,9 @@ router.get('/getHotelById/:id', getHotelById)
 // router.get('/getProductsHost/:user', getProductsHost)
 router.post('/addHotel', addHotel)
 router.get('/getAllHotel', getAllHotel)
+
+router.get('/getAllHotelConfirm', getAllHotelConfirm)
+
 router.get('/getHotelHost/:idUser',getHotelHost)
 router.delete('/deleteHotel/:id', deleteHotelHost)
 router.get('/updateSaoHotel/:id&:TbSao', updateSaoHotel)
