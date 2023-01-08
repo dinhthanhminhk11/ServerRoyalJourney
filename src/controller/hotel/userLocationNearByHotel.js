@@ -12,6 +12,7 @@ export const nearByUserLocation = async (req, res) => {
                             parseFloat(req.body.latitude),
                         ]
                     },
+                    query: { checkConfirm : true},
                     maxDistance: parseInt(req.body.dist),
                     distanceField: 'calculated',
                     spherical: true,
