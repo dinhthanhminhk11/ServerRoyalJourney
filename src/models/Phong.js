@@ -27,9 +27,9 @@ const PhongSchema = mongoose.Schema(
             default: ""
         },
         TienNghiPhong: Array,
-        SoGiuong:{
-            type: Number
-        },
+        bedroom: Array,
+        MaxNguoiLon: {type: Number},
+        MaxTreEm: {type: Number},
         SoPhong: {
             type: Number
         },

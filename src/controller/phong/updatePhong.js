@@ -9,9 +9,11 @@ export const updatePhong = async (req, res) => {
             price: req.body.price,
             idHotel: req.body.idHotel,
             TienNghiPhong: req.body.TienNghiPhong,
-            SoGiuong: req.body.SoGiuong,
             SoPhong: req.body.SoPhong,
-            mota: req.body.mota
+            mota: req.body.mota,
+            MaxNguoiLon: req.body.MaxNguoiLon,
+            MaxTreEm: req.body.MaxTreEm,
+            bedroom: req.body.bedroom,
         }
         const dataUpdate = await phong.updateOne({_id:req.body._id}, dataSave)
         res.status(200).json({

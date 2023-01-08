@@ -8,9 +8,11 @@ export const addPhong = async (req, res) => {
       price: req.body.price,
       idHotel: req.body.idHotel,
       TienNghiPhong: req.body.TienNghiPhong,
-      SoGiuong: req.body.SoGiuong,
       SoPhong: req.body.SoPhong,
-      mota: req.body.mota
+      mota: req.body.mota,
+      MaxNguoiLon: req.body.MaxNguoiLon,
+      MaxTreEm: req.body.MaxTreEm,
+      bedroom: req.body.bedroom,
     }
     const data = await phong(dataSave).save()
     res.status(200).json({
