@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { loginUser, loginHost, loginAdmin , isModerator  , verifyToken} from '../controller/user/signIn'
 import { createHost, createUser , verifyEmail , sendAgain , checkEmailForgot , validateUserPass , newPass , updateCheckTokenDevice , updateInfoUser,updatePassword,getCash ,getPassPin ,createPinPass} from '../controller/user/signUp'
 import { nearByUserLocation,nearByUserLocationAllCategory , moderatorBoard  } from '../controller/product/userLocationNearBy'
+import {getAllHostUser, getCountHotelByUser} from "../controller/user/findUser";
 const router = Router()
 router.route('/signup').post(createUser)
 router.route('/signin').post(loginUser)
@@ -25,4 +26,10 @@ router.route('/updatePassword').patch(updatePassword)
 router.route('/getCash/:id').get(getCash)
 router.route('/getPassPin/:id').get(getPassPin)
 router.route('/createPinPass').post(createPinPass)
+
+
+// getHostAdmin
+
+router.get('/getAllHost', getAllHostUser)
+router.get('/getCountHotelById/:idUser',getCountHotelByUser)
 export default router
