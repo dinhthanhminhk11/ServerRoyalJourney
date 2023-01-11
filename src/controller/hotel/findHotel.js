@@ -3,16 +3,16 @@ import user from "../../models/user";
 import room from "../../models/Phong"
 
 export const getHotelById = async (req, res) => {
-    const filter = {_id: req.params.id}
+    const filter = { _id: req.params.id }
     try {
         const data = await hotel.findById(filter)
-        const dataRoom = await room.find({idHotel:data._id})
-        const dataUser = await user.findById({_id:data.idUser})
+        const dataRoom = await room.find({ idHotel: data._id })
+        const dataUser = await user.findById({ _id: data.idUser })
         res.status(200).json(
             {
-                "dataHotel" : data,
-                "dataRoom" : dataRoom,
-                "dataUser" : dataUser
+                "dataHotel": data,
+                "dataRoom": dataRoom,
+                "dataUser": dataUser
             }
         )
     } catch (error) {
@@ -39,7 +39,7 @@ export const getAllHotel = async (req, res) => {
 
 export const getAllHotelConfirm = async (req, res) => {
     try {
-        const data = await hotel.find({checkConfirm:true})
+        const data = await hotel.find({ checkConfirm: true })
         res.status(200).json({
             message: 'true',
             datapros: data,
@@ -53,7 +53,7 @@ export const getAllHotelConfirm = async (req, res) => {
 }
 export const getHotelHost = async (req, res) => {
     try {
-        const data = await hotel.find({idUser: req.params.idUser})
+        const data = await hotel.find({ idUser: req.params.idUser })
         res.status(200).json({
             message: 'true',
             datapros: data,
@@ -67,7 +67,7 @@ export const getHotelHost = async (req, res) => {
 }
 export const deleteHotelHost = async (req, res) => {
     try {
-        const data = await hotel.deleteOne({_id: req.params.id})
+        const data = await hotel.deleteOne({ _id: req.params.id })
         res.status(200).json({
             message: 'true',
         })
@@ -116,4 +116,36 @@ export const deleteHotelHost = async (req, res) => {
 //         })
 //     }
 // }
+
+export const getHotelAndRoomByIdRoom = async (req, res) => {
+    const filterRoom = { _id: req.params.id }
+    try {
+        const dataRoom = await room.findById(filterRoom)
+        const dataHotel = await hotel.findById({ _id: dataRoom.idHotel })
+        var addressHotel = dataHotel.sonha + ", " + dataHotel.xa + ", " + dataHotel.huyen + ", " + dataHotel.tinh
+        res.status(200).json(
+            {
+                "idHotel": dataHotel._id,
+                "nameHotel": dataHotel.name,
+                "addressHotel": addressHotel,
+                "startHotel" : dataHotel.TbSao,
+                "imageHotel" : dataHotel.images[0],
+                "policyHotel" : dataHotel.chinhSachHuy,
+                "ageChildren" : dataHotel.treEm,
+                "idRoom": dataRoom._id,
+                "nameRoom" : dataRoom.name,
+                "bedroom" : dataRoom.bedroom,
+                "priceRoom" : dataRoom.price,
+                "countRoom" : dataRoom.SoPhong,
+                "maxPeople" : dataRoom.MaxNguoiLon,
+                "maxChildren" : dataRoom.MaxTreEm
+            }
+        )
+    } catch (error) {
+        res.status(400).json({
+            // error
+            message: error,
+        })
+    }
+}
 
