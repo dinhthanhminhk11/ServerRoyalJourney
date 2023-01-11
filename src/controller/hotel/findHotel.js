@@ -118,6 +118,14 @@ export const deleteHotelHost = async (req, res) => {
 // }
 
 export const getHotelAndRoomByIdRoom = async (req, res) => {
+    let ts = Date.now();
+    let date_ob = new Date(ts);
+    let date = date_ob.getDate();
+    let month = date_ob.getMonth() + 1;
+    let year = date_ob.getFullYear();
+    let hours = date_ob.getHours();
+    let minutes = date_ob.getMinutes();
+    let seconds = date_ob.getSeconds();
     const filterRoom = { _id: req.params.id }
     try {
         const dataRoom = await room.findById(filterRoom)
@@ -138,7 +146,8 @@ export const getHotelAndRoomByIdRoom = async (req, res) => {
                 "priceRoom" : dataRoom.price,
                 "countRoom" : dataRoom.SoPhong,
                 "maxPeople" : dataRoom.MaxNguoiLon,
-                "maxChildren" : dataRoom.MaxTreEm
+                "maxChildren" : dataRoom.MaxTreEm,
+                "dateCancel" : date + "/" +month +"/" +year
             }
         )
     } catch (error) {
