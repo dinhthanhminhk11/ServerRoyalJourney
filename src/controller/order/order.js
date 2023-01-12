@@ -12,54 +12,46 @@ const Server_key = 'AAAAXdg_118:APA91bEVZLvJ2g1mgi--7RqdkknlLqy9g-9VpsoAY2Ve8n9x
 var fcm = new FCM(Server_key);
 
 export const createOrder = async (req, res) => {
+  var randomId = "RJ " + Math.floor(Math.random() * (1000000 - 1000000 + 1000000) + 1000000)
+  let ts = Date.now();
+  let date_ob = new Date(ts);
+  let date = date_ob.getDate();
+  let month = date_ob.getMonth() + 1;
+  let year = date_ob.getFullYear();
+  let hours = date_ob.getHours();
+  let minutes = date_ob.getMinutes();
+  let seconds = date_ob.getSeconds();
   try {
     const dataOrder = {
-      IdOder: req.body.IdOder,
-      IdHost: req.body.IdHost,
-      IdPro: req.body.IdPro,
-      IdUser: req.body.IdUser,
-      payDay: req.body.payDay,
-      price: req.body.price,
-      cashMoney: req.body.cashMoney,
-      banking: req.body.banking,
-      isBackingPercent: req.body.isBackingPercent,
+      idOrder: randomId,
+      idHost: req.body.idHost,
+      idUser: req.body.idUser,
+      idHotel: req.body.idHotel,
+      idRoom: req.body.idRoom,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
-      person: req.body.person,
+      payDay: req.body.payDay,
+      countRoom: req.body.countRoom,
+      numberGuests: req.body.numberGuests,
       phone: req.body.phone,
-      pricePercent: req.body.pricePercent
+      specialRequirements: req.body.specialRequirements,
+      priceAll: req.body.priceAll,
+      priceAdmin: req.body.priceAll * 0.1,
+      priceEnterprise: req.body.priceAll * 0.9,
+      cashMoney: req.body.cashMoney,
+      banking: req.body.banking,
+      dateCreate:date+"/" + month +"/" +year,
+      timeCreate: hours +":"+minutes +":"+seconds
     }
+
+    console.log(dataOrder)
     const saveOrder = await new order(dataOrder).save()
-    const date = new Date(saveOrder.createdAt)
-    let time = ''
-    if (24 - date.getHours() - 12 == 0) {
-      time = `12:${date.getMinutes()} PM`
-    } else {
-      time =
-        24 - date.getHours() - 12 < 0
-          ? `${(24 - date.getHours() - 12) * -1}:${date.getMinutes()} PM`
-          : `${date.getHours()}:${date.getMinutes()} AM`
-    }
+    
+    console.log(saveOrder)
+
     res.status(200).json({
-      messege: true,
-      idBill: saveOrder.IdOder,
-      idPro: saveOrder.IdPro,
-      idUser: saveOrder.IdUser,
-      idHost: saveOrder.IdHost,
-      price: saveOrder.price,
-      payDay: saveOrder.payDay,
-      cashMoney: saveOrder.cashMoney,
-      banking: saveOrder.banking,
-      isBackingPercent: saveOrder.isBackingPercent,
-      startDate: saveOrder.startDate,
-      endDate: saveOrder.endDate,
-      person: saveOrder.person,
-      phone: saveOrder.phone,
-      pricePercent: saveOrder.pricePercent,
-      status: 'Đang chờ xác nhận',
-      date: `${date.getDay() == 0 ? 'Chủ Nhật' : 'Thứ ' + date.getDay() + 1
-        }, ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
-      time: time,
+      message: true,
+      dataOrder: saveOrder,
     })
   } catch (error) {
     res.status(401).json({

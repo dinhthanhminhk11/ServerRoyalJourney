@@ -1,25 +1,53 @@
 import mongoose, { Schema } from 'mongoose'
 const orderSchema = mongoose.Schema(
     {
-      IdOder: {
+      idOrder: {
         type: String,
       },
-      IdHost: {
+      idHost: {
         type: Schema.Types.ObjectId,
         ref: 'user',
       },
-      IdUser: {
+      idUser: {
         type: Schema.Types.ObjectId,
         ref: 'user',
       },
-      IdPro: {
+      idHotel: {
         type: Schema.Types.ObjectId,
-        ref: 'Product',
+        ref: 'Hotel',
       },
-      price: {
-        type: String,
+      idRoom: {
+        type: Schema.Types.ObjectId,
+        ref: 'Phong',
+      },
+      startDate:{
+        type: String
+      },
+      endDate: {
+        type: String
       },
       payDay: {
+        type: Number,
+      },
+      countRoom: {
+        type : Number
+      },
+      numberGuests :{
+        type: String
+      },
+      phone:{
+        type: String
+      },
+      specialRequirements: {
+        type: String
+      },
+      priceAll: {
+        type: Number,
+      },
+      priceAdmin: {
+        type: Number,
+      },
+      priceEnterprise: {
         type: Number,
       },
       cashMoney: {
@@ -27,9 +55,6 @@ const orderSchema = mongoose.Schema(
       },
       banking: {
         type: Boolean,
-      },
-      isBackingPercent: {
-        type: Boolean
       },
       seem: {
         type: Boolean,
@@ -39,18 +64,7 @@ const orderSchema = mongoose.Schema(
         type: String,
         default: 'Đang chờ',
       },
-      startDate:{
-        type: String
-      },
-      endDate: {
-        type: String
-      },
-      person: {
-        type: Number
-      },
-      phone:{
-        type: String
-      },
+     
       reasonUser: {
         type: String,
         default : ""
@@ -59,12 +73,11 @@ const orderSchema = mongoose.Schema(
         type: String,
         default : ""
       },
-      pricePercent: {
-        type: String
-      },
       cancellationDate: {
         type: String,
-        default: ""
+      },
+      timeCancellation: {
+        type: String,
       },
       isCancellationDate: {
         type: Boolean,
@@ -77,10 +90,14 @@ const orderSchema = mongoose.Schema(
       checkedOut: {
         type: Boolean,
         default: false
+      },
+      dateCreate: {
+        type: String,
+      },
+      timeCreate: {
+        type: String,
       }
-
-    },
-    { timestamps: true }
+    }
   )
   
   export default mongoose.model('order', orderSchema)

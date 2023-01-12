@@ -118,11 +118,15 @@ export const deleteHotelHost = async (req, res) => {
 // }
 
 export const getHotelAndRoomByIdRoom = async (req, res) => {
+    var currentDate = new Date(new Date().getTime() + 48 * 60 * 60 * 1000);
+
+    let dateTomoro = currentDate.getDate()
+
     let ts = Date.now();
     let date_ob = new Date(ts);
     let date = date_ob.getDate();
-    let month = date_ob.getMonth() + 1;
-    let year = date_ob.getFullYear();
+    let month = currentDate.getMonth() + 1;
+    let year = currentDate.getFullYear();
     let hours = date_ob.getHours();
     let minutes = date_ob.getMinutes();
     let seconds = date_ob.getSeconds();
@@ -134,6 +138,7 @@ export const getHotelAndRoomByIdRoom = async (req, res) => {
         res.status(200).json(
             {
                 "idHotel": dataHotel._id,
+                "idHost" : dataHotel.idUser,
                 "nameHotel": dataHotel.name,
                 "addressHotel": addressHotel,
                 "startHotel" : dataHotel.TbSao,
@@ -147,7 +152,7 @@ export const getHotelAndRoomByIdRoom = async (req, res) => {
                 "countRoom" : dataRoom.SoPhong,
                 "maxPeople" : dataRoom.MaxNguoiLon,
                 "maxChildren" : dataRoom.MaxTreEm,
-                "dateCancel" : date + "/" +month +"/" +year
+                "dateCancel" : dateTomoro + "/" +month +"/" +year
             }
         )
     } catch (error) {
