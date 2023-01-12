@@ -7,7 +7,7 @@ import {
   updateStatus,
   updateStatusDone,
   listOrderByIdUser,
-  
+
   getOrderById,
   updateOrderById,
   updateStatusAccessCancel,
@@ -35,7 +35,7 @@ import {
   listProductAccessByUserId,
   getHouseResponseByServer,
   getBillById,
-  listBillByUserId
+  listBillByUserId, getAllOrderById
 } from '../controller/order/order'
 const router = Router()
 router.route('/addorder').post(createOrder)
@@ -81,6 +81,7 @@ router.route('/getBillById/:id').get(getBillById)
 router.route('/listBillByUserId/:id').get(listBillByUserId)
 
 
+router.get('/getAllOrderById/:idHost', getAllOrderById)
 
 // bill
 

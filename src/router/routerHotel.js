@@ -6,14 +6,15 @@ import {
     getAllHotelConfirm,
     getHotelById,
     getHotelHost,
-    getHotelAndRoomByIdRoom
+    getHotelAndRoomByIdRoom, getHotelByIdHost, getHotelByIdWeb
 } from "../controller/hotel/findHotel";
-import {updateHotel, updateSaoHotel} from "../controller/hotel/updateHotel";
+import {confirmHotel, updateHotel, updateSaoHotel} from "../controller/hotel/updateHotel";
 import {nearByUserLocation} from "../controller/hotel/userLocationNearByHotel";
 
 const router = Router()
 // router.route('/listProduct').get(getProducts)
 router.get('/getHotelById/:id', getHotelById)
+router.get('/getHotelByIdWeb/:id', getHotelByIdWeb)
 // router.get('/getProductsHost/:user', getProductsHost)
 router.post('/addHotel', addHotel)
 router.get('/getAllHotel', getAllHotel)
@@ -28,4 +29,6 @@ router.get('/updateSaoHotel/:id&:TbSao', updateSaoHotel)
 router.post('/hotelNearBy', nearByUserLocation)
 router.post('/updateHotel', updateHotel)
 router.get('/getHotelAndRoomByIdRoom/:id', getHotelAndRoomByIdRoom)
+
+router.get('/confirmHotel/:id&:checkConfirm', confirmHotel)
 export default router

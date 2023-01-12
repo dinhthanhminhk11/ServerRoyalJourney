@@ -56,3 +56,18 @@ export const updateHotel = async (req, res) => {
   }
 }
 
+export const confirmHotel = async (req, res) => {
+  try {
+    const dataUpdate = await hotel.updateOne({_id:req.params.id},
+        {checkConfirm:req.params.checkConfirm})
+    res.status(200).json({
+      message : "true"
+    })
+  } catch (error) {
+    res.status(400).json({
+      messege: 'false',
+      error,
+    })
+  }
+}
+
