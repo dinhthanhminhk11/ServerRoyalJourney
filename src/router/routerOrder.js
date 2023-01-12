@@ -7,6 +7,7 @@ import {
   updateStatus,
   updateStatusDone,
   listOrderByIdUser,
+  
   getOrderById,
   updateOrderById,
   updateStatusAccessCancel,
@@ -32,7 +33,9 @@ import {
   updateNotiSeen,
   listNotibyUserIdNotSeem,
   listProductAccessByUserId,
-  getHouseResponseByServer
+  getHouseResponseByServer,
+  getBillById,
+  listBillByUserId
 } from '../controller/order/order'
 const router = Router()
 router.route('/addorder').post(createOrder)
@@ -74,4 +77,11 @@ router.route('/updateNotiSeen/:id').patch(updateNotiSeen)
 router.route('/listProductAccessByUserId/:id').get(listProductAccessByUserId)
 
 router.route('/getHouseResponseByServer').get(getHouseResponseByServer)
+router.route('/getBillById/:id').get(getBillById)
+router.route('/listBillByUserId/:id').get(listBillByUserId)
+
+
+
+// bill
+
 export default router

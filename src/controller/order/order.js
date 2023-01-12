@@ -2,6 +2,8 @@ import user from '../../models/user'
 import order from '../../models/order'
 import product from '../../models/product'
 import noti from '../../models/Noti'
+import hotel from '../../models/Hotel'
+import room from "../../models/Phong"
 import { response } from 'express'
 const { sendMailComfirmBooking } = require('../../services/MAIL');
 const { sendMailCheckOut, sendMailComfirmCancelByUser, sendMailComfirmCancelByHost } = require('../../services/MAIL');
@@ -21,6 +23,14 @@ export const createOrder = async (req, res) => {
   let hours = date_ob.getHours();
   let minutes = date_ob.getMinutes();
   let seconds = date_ob.getSeconds();
+
+  var currentDate = new Date(new Date().getTime() + 48 * 60 * 60 * 1000);
+  let dateTomoro = currentDate.getDate()
+  let monthTomoro = currentDate.getMonth() + 1;
+  let yearTomoro = currentDate.getFullYear();
+
+  
+
   try {
     const dataOrder = {
       idOrder: randomId,
@@ -40,13 +50,16 @@ export const createOrder = async (req, res) => {
       priceEnterprise: req.body.priceAll * 0.9,
       cashMoney: req.body.cashMoney,
       banking: req.body.banking,
-      dateCreate:date+"/" + month +"/" +year,
-      timeCreate: hours +":"+minutes +":"+seconds
+      dateCreate: date + "/" + month + "/" + year,
+      timeCreate: hours + ":" + minutes + ":" + seconds,
+      refundDate: dateTomoro + "/" + monthTomoro + "/" + yearTomoro
     }
 
     console.log(dataOrder)
     const saveOrder = await new order(dataOrder).save()
+
     
+
     console.log(saveOrder)
 
     res.status(200).json({
@@ -81,7 +94,7 @@ export const ListOrder = async (req, res) => {
         seem: item.seem,
         startDate: item.startDate,
         endDate: item.endDate,
-        reasonUser:item.reasonUser,
+        reasonUser: item.reasonUser,
         person: item.person,
         phone: item.phone,
         status: item.status,
@@ -1067,6 +1080,84 @@ export const getHouseResponseByServer = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       error
+    })
+  }
+}
+
+export const getBillById = async (req, res) => {
+  try {
+    const dataBill = await order.findById(
+      { _id: req.params.id }
+    )
+    const dataRoom = await room.findById({ _id: dataBill.idRoom })
+    const dataHotel = await hotel.findById({ _id: dataBill.idHotel })
+    res.status(200).json({
+      idOrder: dataBill._id,
+      nameHouse: dataHotel.name,
+      startHotel: dataHotel.TbSao,
+      imageHotel: dataHotel.images[0],
+      policyHotel: dataHotel.chinhSachHuy,
+      nameRoom: dataRoom.name,
+      bedroom: dataRoom.bedroom,
+      priceRoom: dataRoom.price,
+      startDate: dataBill.startDate,
+      endDate: dataBill.endDate,
+      payDay: dataBill.payDay,
+      countRoom: dataBill.countRoom,
+      numberGuests: dataBill.numberGuests,
+      phone: dataBill.phone,
+      specialRequirements: dataBill.specialRequirements,
+      priceAll: dataBill.priceAll,
+      cashMoney: dataBill.cashMoney,
+      banking: dataBill.banking,
+      seem: dataBill.seem,
+      status: dataBill.status,
+      reasonUser: dataBill.reasonUser,
+      reasonHost: dataBill.reasonHost,
+      isCancellationDate: dataBill.isCancellationDate,
+      isSuccess: dataBill.isSuccess,
+      checkedOut: dataBill.checkedOut,
+      checkDataCancel: dataBill.refundDate,
+      dateCreate: dataBill.dateCreate,
+      timeCreate: dataBill.timeCreate
+    })
+  } catch (error) {
+    res.status(401).json({
+      messege: false,
+    })
+  }
+}
+
+export const listBillByUserId = async (req, res) => {
+  try {
+    const dataCompile = []
+    const data = await order.find({ idUser: req.params.id })
+    data.forEach(async (item) => {
+      const dataHotel = await hotel.findById({ _id: item.idHotel })
+      const customData = {
+        idBill: item._id,
+        codeBill: item.idOrder,
+        nameHotel: dataHotel.name,
+        countPerson: item.numberGuests,
+        timeCreate: item.timeCreate,
+        imageHotel: dataHotel.images[0],
+        startDate: item.startDate,
+        endDate: item.endDate,
+        timeInRoom: dataHotel.timeDat,
+        timeOutRoom: dataHotel.timeTra,
+        countDay: item.payDay,
+        price: item.priceAll,
+        status: item.status
+      }
+      dataCompile.push(customData)
+    })
+   
+    setTimeout(() => {
+      res.status(200).json(dataCompile.sort() )
+    }, 3000)
+  } catch (error) {
+    res.status(401).json({
+      messege: false,
     })
   }
 }
