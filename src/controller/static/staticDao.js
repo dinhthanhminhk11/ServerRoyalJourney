@@ -1,5 +1,6 @@
 import order from "../../models/order";
 
+
 const start = new Date()
 const end = new Date()
 start.setUTCHours(0, 0, 0, 0)
@@ -38,7 +39,7 @@ const wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6));
 wkEnd.setUTCHours(23,59,99,999)
 export const totalOrder = async (req, res) => {
     try {
-        const data = await order.count({IdHost: req.params.IdHost})
+        const data = await order.count({idHost: req.params.idHost})
         res.json({
             data
         })
@@ -50,7 +51,7 @@ export const totalOrder = async (req, res) => {
 }
 export const totalOrderFinish = async (req, res) => {
     try {
-        const data = await order.count({IdHost: req.params.IdHost, status: 'Đã trả phòng'})
+        const data = await order.count({idHost: req.params.idHost, status: 'Đã trả phòng'})
         res.json({
             data
         })
@@ -63,7 +64,7 @@ export const totalOrderFinish = async (req, res) => {
 export const totalOrderProcess = async (req, res) => {
     try {
         const data = await order.count({
-            IdHost: req.params.IdHost,
+            idHost: req.params.idHost,
             status: {$in: ['Đang chờ', 'Đã xác nhận']}
         })
         res.json({
@@ -78,7 +79,7 @@ export const totalOrderProcess = async (req, res) => {
 export const totalOrderFail = async (req, res) => {
     try {
         const data = await order.count({
-            IdHost: req.params.IdHost,
+            idHost: req.params.idHost,
             status: {$in: ['Chủ đã huỷ', 'Khách huỷ']}
         })
         res.json({
@@ -93,7 +94,7 @@ export const totalOrderFail = async (req, res) => {
 export const getCountTimeOrder = async (req, res) => {
     try {
         const data = await order.find({
-            IdHost: req.params.IdHost,
+            idHost: req.params.idHost,
             createdAt:
                 {
                     $gte: a,
@@ -114,10 +115,10 @@ export const getCountTimeOrder = async (req, res) => {
 export const getPriceDayOrder = async (req, res) => {
     try {
         const data = await order.find({
-            IdHost: req.params.IdHost,
+            idHost: req.params.idHost,
             status: 'Đã trả phòng',
             createdAt: {$gte: a, $lt: b}
-        },{price:1})
+        },{priceEnterprise:1})
         res.json({
             data
         })
@@ -131,10 +132,10 @@ export const getPriceDayOrder = async (req, res) => {
 export const getPriceLastDayOrder = async (req, res) => {
     try {
         const data = await order.find({
-            IdHost: req.params.IdHost,
+            idHost: req.params.idHost,
             status: 'Đã trả phòng',
             createdAt: {$gte: Date.parse(startAfter), $lt: Date.parse(endAfter)}
-        },{price:1})
+        },{priceEnterprise:1})
         res.json({
             data
         })
@@ -150,10 +151,10 @@ export const getPriceWeekOrder = async (req, res) => {
         const aWeek = Date.parse(wkStart.toString())
         const bWeek = Date.parse(wkEnd.toString())
         const data = await order.find({
-            IdHost: req.params.IdHost,
+            idHost: req.params.idHost,
             status: 'Đã trả phòng',
             createdAt: {$gte: aWeek, $lt: bWeek}
-        },{price:1})
+        },{priceEnterprise:1})
         res.json({
             data
         })
@@ -169,10 +170,10 @@ export const getPriceMonthOrder = async (req, res) => {
         const aMonth = Date.parse(firstMonth.toString())
         const bMonth = Date.parse(lastMonth.toString())
         const data = await order.find({
-            IdHost: req.params.IdHost,
+            idHost: req.params.idHost,
             status: 'Đã trả phòng',
             createdAt: {$gte: aMonth, $lt: bMonth}
-        },{price:1})
+        },{priceEnterprise:1})
         res.json({
             data
         })
@@ -188,10 +189,10 @@ export const getPriceYearOrder = async (req, res) => {
         const aYear = Date.parse(firstYear.toString())
         const bYear = Date.parse(lastYear.toString())
         const data = await order.find({
-            IdHost: req.params.IdHost,
+            idHost: req.params.idHost,
             status: 'Đã trả phòng',
             createdAt: {$gte: aYear, $lt: bYear}
-        },{price:1})
+        },{priceEnterprise:1})
         res.json({
             data
         })
@@ -209,10 +210,10 @@ export const getPriceOrder= async (req, res) => {
         let endDate= new Date(req.params.endDay)
         endDate.setUTCHours(23,59,59,999)
         const data = await order.find({
-            IdHost: req.params.IdHost,
+            idHost: req.params.idHost,
             status: 'Đã trả phòng',
             createdAt: {$gte: Date.parse(startDate), $lt: Date.parse(endDate)}
-        },{price:1})
+        },{priceEnterprise:1})
         res.json({
             data
         })
@@ -227,9 +228,9 @@ export const getPriceOrder= async (req, res) => {
 export const getPriceOrderWaiting= async (req, res) => {
     try {
         const data = await order.find({
-            IdHost: req.params.IdHost,
+            idHost: req.params.idHost,
             status: 'Đang chờ',
-        },{price:1})
+        },{priceEnterprise:1})
         res.json({
             data
         })
