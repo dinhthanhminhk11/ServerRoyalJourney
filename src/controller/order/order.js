@@ -4,7 +4,7 @@ import product from '../../models/product'
 import noti from '../../models/Noti'
 import hotel from '../../models/Hotel'
 import room from "../../models/Phong"
-import { response } from 'express'
+import e, { response } from 'express'
 import Hotel from "../../models/Hotel";
 import User from "../../models/user";
 import cash from '../../models/cashFlow'
@@ -60,14 +60,34 @@ export const createOrder = async (req, res) => {
     console.log(dataOrder)
     const saveOrder = await new order(dataOrder).save()
 
+    if (saveOrder.banking) {
+      const dataUser = await User.findById({ _id: saveOrder.idUser })
+      const dataHotel = await hotel.findById({ _id: saveOrder.idHotel })
+      var price = parseInt(dataUser.priceCashFlow) - saveOrder.priceAll;
 
-    console.log(saveOrder)
+      const dataUserUpdate = await user.findOneAndUpdate(
+        { _id: dataUser._id },
+        { priceCashFlow: String(price) },
+        { new: true }
+      )
+
+      const dataCashFlow = {
+        idUser: dataUserUpdate._id,
+        title: "Thông báo biến động số dư",
+        content: "Thanh toán phòng từ khách sạn " + dataHotel.name,
+        price: saveOrder.priceAll,
+        dateTime: hours + ":" + minutes + " " + date + "-" + month + "-" + year,
+        status: false
+      }
+      const saveCashFlow = await new cash(dataCashFlow).save()
+    }
 
     res.status(200).json({
       message: true,
       dataOrder: saveOrder,
     })
   } catch (error) {
+    console.log(error)
     res.status(401).json({
       messege: false,
     })
@@ -132,12 +152,25 @@ export const updateStatus = async (req, res) => {
       { status: req.body.status, seem: true, reasonHost: req.body.reasonHost, isSuccess: true },
       { new: true }
     )
+    const dataRoomBefore = await room.findById({ _id: dataUpdate.idRoom })
 
-    const dataProductUpdate = await product.findOneAndUpdate(
-      { _id: dataUpdate.IdPro },
-      { isStillEmpty: true },
-      { new: true }
-    )
+    var countRoomBefore = dataRoomBefore.SoPhong - dataUpdate.countRoom
+
+    const dataRoom = await room.findOneAndUpdate(
+      { _id: dataUpdate.idRoom }
+      ,
+      {
+        SoPhong: countRoomBefore
+      },
+      {
+        new: true
+      })
+
+    // const dataProductUpdate = await product.findOneAndUpdate(
+    //   { _id: dataUpdate.IdPro },
+    //   { isStillEmpty: true },
+    //   { new: true }
+    // )
 
     // const dataOrderMutil = await order.updateMany({
     //         status: 'Đang chờ',
@@ -190,28 +223,57 @@ export const updateStatus = async (req, res) => {
       data: dataUpdate,
     })
   } catch (error) {
+    console.log(error)
     res.status(401).json({
       messege: false,
     })
   }
 }
 export const ordercancel = async (req, res) => {
+  let ts = Date.now();
+  let date_ob = new Date(ts);
+  let date = date_ob.getDate();
+  let month = date_ob.getMonth() + 1;
+  let year = date_ob.getFullYear();
+  let hours = date_ob.getHours();
+  let minutes = date_ob.getMinutes();
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { _id: req.body.id },
       { status: req.body.status, seem: true, reasonHost: req.body.reasonHost },
       { new: true }
     )
-    // const dataProductUpdate = await product.findOneAndUpdate(
-    //     {_id: dataUpdate.IdPro},
-    //     {isStillEmpty: false},
-    //     {new: true}
-    // )
+    const dataUser = await User.findById({ _id: dataUpdate.idUser })
+    const dataHotel = await hotel.findById({ _id: dataUpdate.idHotel })
+
+    var price = parseInt(dataUser.priceCashFlow) + dataUpdate.priceAll;
+
+    if (dataUpdate.banking) {
+      const dataUserUpdate = await user.findOneAndUpdate(
+        { _id: dataUser._id },
+        { priceCashFlow: String(price) },
+        { new: true }
+      )
+
+      const dataCashFlow = {
+        idUser: dataUserUpdate._id,
+        title: "Thông báo biến động số dư",
+        content: "Khách sạn " + dataHotel.name + " hoàn tiền do chủ khách sạn không tiếp nhận yêu cầu đặt phòng của bạn",
+        price: dataUpdate.priceAll,
+        dateTime: hours + ":" + minutes + " " + date + "-" + month + "-" + year,
+        status: true
+      }
+      const saveCashFlow = await new cash(dataCashFlow).save()
+
+    }
+
+
     res.status(200).json({
       messege: true,
       data: dataUpdate,
     })
   } catch (error) {
+    console.log(error)
     res.status(401).json({
       messege: false,
     })
@@ -246,87 +308,101 @@ export const updateOrderById = async (req, res) => {
   let seconds = date_ob.getSeconds();
   try {
 
-    const dataBill = await order.findById({ _id: req.body.id })
-    const dataHotel = await hotel.findById({ _id: dataBill.idHotel })
-    const dataUser = await user.findById({ _id: dataBill.idUser })
-    const dateNow = stringToDate(date + "/" + month + "/" + year, "dd/MM/yyyy", "/")
-    const dateCancel = stringToDate(dataBill.refundDate, "dd/MM/yyyy", "/")
+    // const dataBill = await order.findById({ _id: req.body.id })
+    // const dataHotel = await hotel.findById({ _id: dataBill.idHotel })
+    // const dataUser = await user.findById({ _id: dataBill.idUser })
+    // const dateNow = stringToDate(date + "/" + month + "/" + year, "dd/MM/yyyy", "/")
+    // const dateCancel = stringToDate(dataBill.refundDate, "dd/MM/yyyy", "/")
 
-    var price = parseInt(dataUser.priceCashFlow) + dataBill.priceAll
+    // const dataBillUpdate = await order.findOneAndUpdate(
+    //   { _id: req.body.id },
+    //   {
+    //     status: req.body.status,
+    //     seem: true,
+    //     reasonUser: req.body.reasonUser,
+    //     cancellationDate: date + "/" + month + "/" + year,
+    //     timeCancellation: hours + ":" + minutes + ":" + seconds,
+    //     priceAdmin: 0,
+    //     priceEnterprise: 0
+    //   },
+    //   { new: true }
+    // )
 
-    console.log(price)
-    if (dataBill.chinhSachHuy) {
-      const dataBillUpdate = await order.findOneAndUpdate(
-        { _id: req.body.id },
-        {
-          status: req.body.status,
-          seem: true,
-          reasonUser: req.body.reasonUser,
-          cancellationDate: date + "/" + month + "/" + year,
-          timeCancellation: hours + ":" + minutes + ":" + seconds,
-          priceAdmin: 0,
-          priceEnterprise: 0
-        },
-        { new: true }
-      )
-      const dataUserUpdate = await user.findOneAndUpdate(
-        { _id: dataBill.idUser },
-        { priceCashFlow: String(price) },
-        { new: true }
-      )
-      const dataCashFlow = {
-        idUser: dataUser._id,
-        title: "Thông báo biến động số dư",
-        content: "Hoàn huỷ từ khách sạn " + dataHotel.name,
-        price: dataBill.priceAll,
-        dateTime: hours + ":" + minutes + " " + date + "-" + month + "-" + year,
-        status: true
-      }
-      const saveCashFlow = await new cash(dataCashFlow).save()
+    // var price = parseInt(dataUser.priceCashFlow) + dataBill.priceAll
 
-    } else {
-      if (isBefore(dateNow, dateCancel)) {
-        const dataBillUpdate1 = await order.findOneAndUpdate(
-          { _id: req.body.id },
-          {
-            status: req.body.status,
-            seem: true,
-            reasonUser: req.body.reasonUser,
-            cancellationDate: date + "/" + month + "/" + year,
-            timeCancellation: hours + ":" + minutes + ":" + seconds,
-            priceAdmin: 0,
-            priceEnterprise: 0
-          },
-          { new: true }
-        )
-        const dataUserUpdate1 = await user.findOneAndUpdate(
-          { _id: dataBill.idUser },
-          { priceCashFlow: String(price) },
-          { new: true }
-        )
-        const dataCashFlow1 = {
-          idUser: dataUser._id,
-          title: "Thông báo biến động số dư",
-          content: "Hoàn huỷ từ khách sạn " + dataHotel.name,
-          price: dataBill.priceAll,
-          dateTime: hours + ":" + minutes + " " + date + "-" + month + "-" + year,
-          status: true
-        }
-        const saveCashFlow1 = await new cash(dataCashFlow1).save()
-      } else {
-        const dataBillUpdate1 = await order.findOneAndUpdate(
-          { _id: req.body.id },
-          {
-            status: req.body.status,
-            seem: true,
-            reasonUser: req.body.reasonUser,
-            cancellationDate: date + "/" + month + "/" + year,
-            timeCancellation: hours + ":" + minutes + ":" + seconds,
-          },
-          { new: true }
-        )
-      }
-    }
+    // console.log(price)
+    // if (dataBill.chinhSachHuy) {
+    //   const dataBillUpdate = await order.findOneAndUpdate(
+    //     { _id: req.body.id },
+    //     {
+    //       status: req.body.status,
+    //       seem: true,
+    //       reasonUser: req.body.reasonUser,
+    //       cancellationDate: date + "/" + month + "/" + year,
+    //       timeCancellation: hours + ":" + minutes + ":" + seconds,
+    //       priceAdmin: 0,
+    //       priceEnterprise: 0
+    //     },
+    //     { new: true }
+    //   )
+    //   const dataUserUpdate = await user.findOneAndUpdate(
+    //     { _id: dataBill.idUser },
+    //     { priceCashFlow: String(price) },
+    //     { new: true }
+    //   )
+    //   const dataCashFlow = {
+    //     idUser: dataUser._id,
+    //     title: "Thông báo biến động số dư",
+    //     content: "Hoàn huỷ từ khách sạn " + dataHotel.name,
+    //     price: dataBill.priceAll,
+    //     dateTime: hours + ":" + minutes + " " + date + "-" + month + "-" + year,
+    //     status: true
+    //   }
+    //   const saveCashFlow = await new cash(dataCashFlow).save()
+
+    // } else {
+    //   if (isBefore(dateNow, dateCancel)) {
+    //     const dataBillUpdate1 = await order.findOneAndUpdate(
+    //       { _id: req.body.id },
+    //       {
+    //         status: req.body.status,
+    //         seem: true,
+    //         reasonUser: req.body.reasonUser,
+    //         cancellationDate: date + "/" + month + "/" + year,
+    //         timeCancellation: hours + ":" + minutes + ":" + seconds,
+    //         priceAdmin: 0,
+    //         priceEnterprise: 0
+    //       },
+    //       { new: true }
+    //     )
+    //     const dataUserUpdate1 = await user.findOneAndUpdate(
+    //       { _id: dataBill.idUser },
+    //       { priceCashFlow: String(price) },
+    //       { new: true }
+    //     )
+    //     const dataCashFlow1 = {
+    //       idUser: dataUser._id,
+    //       title: "Thông báo biến động số dư",
+    //       content: "Hoàn huỷ từ khách sạn " + dataHotel.name,
+    //       price: dataBill.priceAll,
+    //       dateTime: hours + ":" + minutes + " " + date + "-" + month + "-" + year,
+    //       status: true
+    //     }
+    //     const saveCashFlow1 = await new cash(dataCashFlow1).save()
+    //   } else {
+    //     const dataBillUpdate1 = await order.findOneAndUpdate(
+    //       { _id: req.body.id },
+    //       {
+    //         status: req.body.status,
+    //         seem: true,
+    //         reasonUser: req.body.reasonUser,
+    //         cancellationDate: date + "/" + month + "/" + year,
+    //         timeCancellation: hours + ":" + minutes + ":" + seconds,
+    //       },
+    //       { new: true }
+    //     )
+    //   }
+    // }
 
     const dataUpdate = await order.findOneAndUpdate(
       { _id: req.body.id },
@@ -405,10 +481,121 @@ export const updateStatusDone = async (req, res) => {
   }
 }
 export const updateStatusAccessCancel = async (req, res) => {
+  let ts = Date.now();
+  let date_ob = new Date(ts);
+  let date = date_ob.getDate();
+  let month = date_ob.getMonth() + 1;
+  let year = date_ob.getFullYear();
+  let hours = date_ob.getHours();
+  let minutes = date_ob.getMinutes();
+  let seconds = date_ob.getSeconds();
   try {
+
+    const dataBill = await order.findById({ _id: req.body.id })
+    const dataHotel = await hotel.findById({ _id: dataBill.idHotel })
+    const dataUser = await user.findById({ _id: dataBill.idUser })
+    const dateNow = stringToDate(date + "/" + month + "/" + year, "dd/MM/yyyy", "/")
+    const dateCancel = stringToDate(dataBill.refundDate, "dd/MM/yyyy", "/")
+    const dataRoom = await room.findById({ _id: dataBill.idRoom })
+    var price = parseInt(dataUser.priceCashFlow) + dataBill.priceAll
+    if (dataBill.banking) {
+      if (dataHotel.chinhSachHuy) {
+        // có cho huỷ
+         const dataUpdate = await order.findOneAndUpdate(
+            { _id: req.body.id },
+            {
+              isCancellationDate: true,
+              seem: true,
+              priceAdmin: 0,
+              priceEnterprise: 0
+            },
+            { new: true }
+          )
+          const dataUserUpdate1 = await user.findOneAndUpdate(
+            { _id: dataBill.idUser },
+            { priceCashFlow: String(price) },
+            { new: true }
+          )
+
+          const dataCashFlow = {
+            idUser: dataUser._id,
+            title: "Thông báo biến động số dư",
+            content: "Hoàn huỷ từ khách sạn " + dataHotel.name,
+            price: dataBill.priceAll,
+            dateTime: hours + ":" + minutes + " " + date + "-" + month + "-" + year,
+            status: true
+          }
+          const saveCashFlow = await new cash(dataCashFlow).save()
+      } else {
+        // check ngày huỷ
+        if (isBefore(dateNow, dateCancel)) {
+          // huỷ đúng hạn
+          const dataUpdate = await order.findOneAndUpdate(
+            { _id: req.body.id },
+            {
+              isCancellationDate: true,
+              seem: true,
+              priceAdmin: 0,
+              priceEnterprise: 0
+            },
+            { new: true }
+          )
+          const dataUserUpdate1 = await user.findOneAndUpdate(
+            { _id: dataBill.idUser },
+            { priceCashFlow: String(price) },
+            { new: true }
+          )
+
+          const dataCashFlow = {
+            idUser: dataUser._id,
+            title: "Thông báo biến động số dư",
+            content: "Hoàn huỷ từ khách sạn " + dataHotel.name,
+            price: dataBill.priceAll,
+            dateTime: hours + ":" + minutes + " " + date + "-" + month + "-" + year,
+            status: true
+          }
+          const saveCashFlow = await new cash(dataCashFlow).save()
+
+        } else {
+          //huỷ sai hạn
+          const dataUpdate = await order.findOneAndUpdate(
+            { _id: req.body.id },
+            {
+              isCancellationDate: true, seem: true,
+            },
+            { new: true }
+          )
+        }
+      }
+    } else {
+      // không chuyển khoản
+      const dataUpdate = await order.findOneAndUpdate(
+        { _id: req.body.id },
+        {
+          isCancellationDate: true, seem: true,
+        },
+        { new: true }
+      )
+    }
+
+    var countRoomBefore = dataRoom.SoPhong + dataBill.countRoom
+    if(dataBill.isSuccess){
+      const dataRoomUpdate = await room.findOneAndUpdate(
+        { _id: dataBill.idRoom }
+        ,
+        {
+          SoPhong: countRoomBefore
+        },
+        {
+          new: true
+        })
+    }
+
     const dataUpdate = await order.findOneAndUpdate(
       { _id: req.body.id },
-      { isCancellationDate: true, seem: true },
+      {
+        isCancellationDate: true, seem: true,
+      },
       { new: true }
     )
     // const dataProductUpdate = await product.findOneAndUpdate(
@@ -416,9 +603,9 @@ export const updateStatusAccessCancel = async (req, res) => {
     //   { isStillEmpty: false },
     //   { new: true }
     // )
-    const dataUser = await user.findOneAndUpdate(
+    const dataUser1 = await user.findOneAndUpdate(
       { _id: dataUpdate.idUser },
-      { countBooking: userUpdate.countBooking -= 1 },
+      { countBooking: dataUser.countBooking -= 1 },
       { new: true }
     )
     res.status(200).json({
@@ -426,6 +613,7 @@ export const updateStatusAccessCancel = async (req, res) => {
       data: dataUpdate,
     })
   } catch (error) {
+    console.log(error)
     res.status(401).json({
       messege: false,
     })
@@ -734,6 +922,7 @@ export const checkedOutRoom = async (req, res) => {
       { checkedOut: true, status: 'Đã trả phòng' },
       { new: true }
     )
+    const dataRoom = await room.findById({ _id: dataUpdate.idRoom })
 
     const userUpdate = await user.findById({ _id: dataUpdate.idUser })
 
@@ -743,6 +932,17 @@ export const checkedOutRoom = async (req, res) => {
       { new: true }
     )
 
+    var countRoomBefore = dataRoom.SoPhong + dataUpdate.countRoom
+
+    const dataRoomUpdate = await room.findOneAndUpdate(
+      { _id: dataUpdate.idRoom }
+      ,
+      {
+        SoPhong: countRoomBefore
+      },
+      {
+        new: true
+      })
 
     res.status(200).json({
       messege: true,
@@ -945,7 +1145,7 @@ export const createNotiAccess = async (req, res) => {
   let seconds = date_ob.getSeconds();
   try {
     const dataOrder = await order.findOne({
-      _id: req.body._id
+      _id: req.body.id
     })
 
     const dataHotel = await Hotel.findById({ _id: dataOrder.idHotel })
@@ -970,6 +1170,7 @@ export const createNotiAccess = async (req, res) => {
     })
 
   } catch (error) {
+    console.log(error)
     res.status(401).json({
       messege: false
     })
@@ -996,7 +1197,7 @@ export const createNotiCancel = async (req, res) => {
       idOder: dataOrder._id,
       idUser: dataOrder.idUser,
       title: 'Yêu cầu không được chấp nhận',
-      content: 'Chủ phòng ' + dataHotel.name + ' đã từ chối bạn. Lí do: "' + req.body.reasonHost + '"',
+      content: 'Khách sạn ' + dataHotel.name + ' đã từ chối bạn. Lí do: "' + req.body.reasonHost + '"',
       imageHoust: dataHotel.images[0],
       date: date + "/" + month + "/" + year,
       time: hours + ":" + minutes + ":" + seconds
@@ -1008,6 +1209,7 @@ export const createNotiCancel = async (req, res) => {
     })
 
   } catch (error) {
+    console.log(error)
     res.status(401).json({
       messege: false
     })
@@ -1046,6 +1248,7 @@ export const createNotiAccessCancel = async (req, res) => {
     })
 
   } catch (error) {
+    console.log(error)
     res.status(401).json({
       messege: false
     })
@@ -1063,19 +1266,17 @@ export const createNotiSuccess = async (req, res) => {
   let seconds = date_ob.getSeconds();
   try {
     const dataOrder = await order.findOne({
-      IdOder: req.body.id
+      _id: req.body.id
     })
 
-    const dataProduct = await product.findOne({
-      _id: dataOrder.IdPro
-    })
+    const dataHotel = await Hotel.findById({ _id: dataOrder.idHotel })
 
     const dataNewNoti = {
-      idOder: dataOrder.IdOder,
-      idUser: dataOrder.IdUser,
+      idOder: dataOrder._id,
+      idUser: dataOrder.idUser,
       title: 'Hoàn tất',
-      content: 'Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi, Chủ phòng ' + dataProduct.name + ' ý kiến của bạn sẽ là động lực cho chúng tôi phát triển và hoàn thiện hơn',
-      imageHoust: dataProduct.images[0],
+      content: 'Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi, Chủ phòng ' + dataHotel.name + ' ý kiến của bạn sẽ là động lực cho chúng tôi phát triển và hoàn thiện hơn',
+      imageHoust: dataHotel.images[0],
       date: date + "/" + month + "/" + year,
       time: hours + ":" + minutes + ":" + seconds
     }
@@ -1086,6 +1287,7 @@ export const createNotiSuccess = async (req, res) => {
     })
 
   } catch (error) {
+    console.log(error)
     res.status(401).json({
       messege: false
     })
