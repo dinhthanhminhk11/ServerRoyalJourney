@@ -1393,7 +1393,11 @@ export const getBillById = async (req, res) => {
     )
     const dataRoom = await room.findById({ _id: dataBill.idRoom })
     const dataHotel = await hotel.findById({ _id: dataBill.idHotel })
+    const dataHost =  await User.findById({ _id: dataBill.idHost })
     res.status(200).json({
+      idHotel: dataHotel._id,
+      nameHost: dataHost.name,
+      imageHost: dataHost.image,
       idOrder: dataBill._id,
       nameHouse: dataHotel.name,
       startHotel: dataHotel.TbSao,
