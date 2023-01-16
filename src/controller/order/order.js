@@ -149,7 +149,10 @@ export const updateStatus = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { _id: req.body.id },
-      { status: req.body.status, seem: true, reasonHost: req.body.reasonHost, isSuccess: true },
+      {
+        status: req.body.status, seem: true, reasonHost: req.body.reasonHost, isSuccess: true,
+        content: "Chủ phòng đã tiếp nhận yêu cầu đặt phòng của bạn"
+      },
       { new: true }
     )
     const dataRoomBefore = await room.findById({ _id: dataUpdate.idRoom })
@@ -238,17 +241,24 @@ export const ordercancel = async (req, res) => {
   let hours = date_ob.getHours();
   let minutes = date_ob.getMinutes();
   try {
-    const dataUpdate = await order.findOneAndUpdate(
-      { _id: req.body.id },
-      { status: req.body.status, seem: true, reasonHost: req.body.reasonHost },
-      { new: true }
-    )
-    const dataUser = await User.findById({ _id: dataUpdate.idUser })
-    const dataHotel = await hotel.findById({ _id: dataUpdate.idHotel })
 
-    var price = parseInt(dataUser.priceCashFlow) + dataUpdate.priceAll;
+    const dataBill = await order.findById({ _id: req.body.id })
+    const dataUser = await User.findById({ _id: dataBill.idUser })
+    const dataHotel = await hotel.findById({ _id: dataBill.idHotel })
 
-    if (dataUpdate.banking) {
+    var price = parseInt(dataUser.priceCashFlow) + dataBill.priceAll;
+
+    if (dataBill.banking) {
+
+      const dataUpdate = await order.findOneAndUpdate(
+        { _id: req.body.id },
+        {
+          status: req.body.status, seem: true, reasonHost: req.body.reasonHost,
+          content: "Do chủ phòng đã từ chối yêu cầu của bạn, số tiền đã được chuyển vào ví RoyalJourneySuper Account của bạn"
+        },
+        { new: true }
+      )
+
       const dataUserUpdate = await user.findOneAndUpdate(
         { _id: dataUser._id },
         { priceCashFlow: String(price) },
@@ -259,18 +269,27 @@ export const ordercancel = async (req, res) => {
         idUser: dataUserUpdate._id,
         title: "Thông báo biến động số dư",
         content: "Khách sạn " + dataHotel.name + " hoàn tiền do chủ khách sạn không tiếp nhận yêu cầu đặt phòng của bạn",
-        price: dataUpdate.priceAll,
+        price: dataBill.priceAll,
         dateTime: hours + ":" + minutes + " " + date + "-" + month + "-" + year,
         status: true
       }
       const saveCashFlow = await new cash(dataCashFlow).save()
 
+    } else {
+      const dataUpdate = await order.findOneAndUpdate(
+        { _id: req.body.id },
+        {
+          status: req.body.status, seem: true, reasonHost: req.body.reasonHost,
+          content: "Chủ phòng đã từ chối yêu cầu của bạn"
+        },
+        { new: true }
+      )
     }
 
 
     res.status(200).json({
       messege: true,
-      data: dataUpdate,
+      data: dataBill,
     })
   } catch (error) {
     console.log(error)
@@ -501,31 +520,32 @@ export const updateStatusAccessCancel = async (req, res) => {
     if (dataBill.banking) {
       if (dataHotel.chinhSachHuy) {
         // có cho huỷ
-         const dataUpdate = await order.findOneAndUpdate(
-            { _id: req.body.id },
-            {
-              isCancellationDate: true,
-              seem: true,
-              priceAdmin: 0,
-              priceEnterprise: 0
-            },
-            { new: true }
-          )
-          const dataUserUpdate1 = await user.findOneAndUpdate(
-            { _id: dataBill.idUser },
-            { priceCashFlow: String(price) },
-            { new: true }
-          )
+        const dataUpdate = await order.findOneAndUpdate(
+          { _id: req.body.id },
+          {
+            isCancellationDate: true,
+            seem: true,
+            priceAdmin: 0,
+            priceEnterprise: 0,
+            content: "Số tiền đã được chuyển vào ví RoyalJourneySuper Account của bạn"
+          },
+          { new: true }
+        )
+        const dataUserUpdate1 = await user.findOneAndUpdate(
+          { _id: dataBill.idUser },
+          { priceCashFlow: String(price) },
+          { new: true }
+        )
 
-          const dataCashFlow = {
-            idUser: dataUser._id,
-            title: "Thông báo biến động số dư",
-            content: "Hoàn huỷ từ khách sạn " + dataHotel.name,
-            price: dataBill.priceAll,
-            dateTime: hours + ":" + minutes + " " + date + "-" + month + "-" + year,
-            status: true
-          }
-          const saveCashFlow = await new cash(dataCashFlow).save()
+        const dataCashFlow = {
+          idUser: dataUser._id,
+          title: "Thông báo biến động số dư",
+          content: "Hoàn huỷ từ khách sạn " + dataHotel.name,
+          price: dataBill.priceAll,
+          dateTime: hours + ":" + minutes + " " + date + "-" + month + "-" + year,
+          status: true
+        }
+        const saveCashFlow = await new cash(dataCashFlow).save()
       } else {
         // check ngày huỷ
         if (isBefore(dateNow, dateCancel)) {
@@ -536,7 +556,8 @@ export const updateStatusAccessCancel = async (req, res) => {
               isCancellationDate: true,
               seem: true,
               priceAdmin: 0,
-              priceEnterprise: 0
+              priceEnterprise: 0,
+              content: "Số tiền đã được chuyển vào ví RoyalJourneySuper Account của bạn"
             },
             { new: true }
           )
@@ -562,6 +583,7 @@ export const updateStatusAccessCancel = async (req, res) => {
             { _id: req.body.id },
             {
               isCancellationDate: true, seem: true,
+              content: "Huỷ sai hạn chúng tôi không thể hoàn tiền cho bạn!"
             },
             { new: true }
           )
@@ -579,7 +601,7 @@ export const updateStatusAccessCancel = async (req, res) => {
     }
 
     var countRoomBefore = dataRoom.SoPhong + dataBill.countRoom
-    if(dataBill.isSuccess){
+    if (dataBill.isSuccess) {
       const dataRoomUpdate = await room.findOneAndUpdate(
         { _id: dataBill.idRoom }
         ,
@@ -787,6 +809,7 @@ export const senNotificationAccess = async (req, res) => {
       }
     });
   } catch (error) {
+    console.log(error)
     res.status(401).json({
       messege: false
     })
@@ -827,6 +850,8 @@ export const senNotificationCancel = async (req, res) => {
       }
     });
   } catch (error) {
+    console.log(error)
+
     res.status(401).json({
       messege: false
     })
@@ -867,6 +892,8 @@ export const senNotificationRequestCancel = async (req, res) => {
       }
     });
   } catch (error) {
+    console.log(error)
+
     res.status(401).json({
       messege: false
     })
@@ -919,7 +946,10 @@ export const checkedOutRoom = async (req, res) => {
   try {
     const dataUpdate = await order.findOneAndUpdate(
       { _id: req.body.id },
-      { checkedOut: true, status: 'Đã trả phòng' },
+      {
+        checkedOut: true, status: 'Đã trả phòng',
+        content: "Đã trả phòng cảm ơn quý khách đã sửa dụng dịch vụ của chúng tôi"
+      },
       { new: true }
     )
     const dataRoom = await room.findById({ _id: dataUpdate.idRoom })
@@ -1421,7 +1451,8 @@ export const getBillById = async (req, res) => {
       checkedOut: dataBill.checkedOut,
       checkDataCancel: dataBill.refundDate,
       dateCreate: dataBill.dateCreate,
-      timeCreate: dataBill.timeCreate
+      timeCreate: dataBill.timeCreate,
+      content: dataBill.content
     })
   } catch (error) {
     res.status(401).json({
