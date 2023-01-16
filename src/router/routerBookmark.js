@@ -4,6 +4,6 @@ const router = Router()
 
 router.post('/createBookmark' ,createBookmark )
 router.get('/listBookmarkById/:id' ,listProductById )
-router.delete('/deleteBookmark/:idUser/:idHouse' ,deleteBookmark )
-router.get('/getBookmarkByIdUserAndIdHouse/:idUser/:idHouse' ,getBookmarkByIdUserAndIdHouse )
+router.delete('/deleteBookmark/:idUser/:idHotel' ,deleteBookmark )
+router.get('/getBookmarkByIdUserAndIdHouse/:idUser/:idHotel' ,getBookmarkByIdUserAndIdHouse )
 export default router;

@@ -7,7 +7,7 @@ export const createBookmark = async (req, res) => {
     try {
         const dataBookmark = {
             idUser: req.body.idUser,
-            idHouse: req.body.idHouse
+            idHotel: req.body.idHotel
         }
         const saveBookmark = await new bookmark(dataBookmark).save()
         res.status(200).json({
@@ -24,7 +24,7 @@ export const createBookmark = async (req, res) => {
 export const listProductById = async (req, res) => {
     try {
         const dataBookmark = await bookmark.find({
-            'idUser': req.params.id
+            idUser: req.params.id
         })
         // dataBookmark.forEach(element => {
         //     dataProduct.push(element.idHouse)
@@ -44,8 +44,8 @@ export const listProductById = async (req, res) => {
 export const deleteBookmark = async (req, res) => {
     try {
         const data = await bookmark.findOneAndDelete({
-            'idUser': req.params.idUser,
-            'idHouse': req.params.idHouse
+            idUser: req.params.idUser,
+            idHotel: req.params.idHotel
         })
         res.status(200).json({
             message: true,
@@ -61,8 +61,8 @@ export const deleteBookmark = async (req, res) => {
 export const getBookmarkByIdUserAndIdHouse = async (req, res) => {
     try {
         const dataBookmark = await bookmark.find({
-            'idUser': req.params.idUser,
-            'idHouse': req.params.idHouse
+            idUser: req.params.idUser,
+            idHotel: req.params.idHotel
         })
         res.status(200).json({
             message: true,

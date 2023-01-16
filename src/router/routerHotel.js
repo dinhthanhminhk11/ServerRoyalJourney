@@ -28,7 +28,7 @@ router.get('/updateSaoHotel/:id&:TbSao', updateSaoHotel)
 // router.get('/listSearchProduct/:nameLocation', searchProducts)
 router.post('/hotelNearBy', nearByUserLocation)
 router.post('/updateHotel', updateHotel)
-router.get('/getHotelAndRoomByIdRoom/:id', getHotelAndRoomByIdRoom)
+router.get('/getHotelAndRoomByIdRoom/:id/:idUser', getHotelAndRoomByIdRoom)
 
 router.get('/confirmHotel/:id&:checkConfirm', confirmHotel)
 export default router

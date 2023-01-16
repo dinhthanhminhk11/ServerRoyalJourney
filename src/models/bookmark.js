@@ -5,9 +5,9 @@ const bookmarkSchema = mongoose.Schema(
             type: Schema.Types.ObjectId,
             ref: 'user',
         },
-        idHouse:{
+        idHotel:{
             type: Schema.Types.ObjectId,
-            ref: 'Product',
+            ref: 'Hotel',
         },
         isCheck: {
             type: Boolean,

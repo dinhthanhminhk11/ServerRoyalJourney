@@ -151,6 +151,7 @@ export const getHotelAndRoomByIdRoom = async (req, res) => {
     try {
         const dataRoom = await room.findById(filterRoom)
         const dataHotel = await hotel.findById({ _id: dataRoom.idHotel })
+        const dataUser = await user.findById({ _id: req.params.idUser })
         var addressHotel = dataHotel.sonha + ", " + dataHotel.xa + ", " + dataHotel.huyen + ", " + dataHotel.tinh
         res.status(200).json(
             {
@@ -169,10 +170,13 @@ export const getHotelAndRoomByIdRoom = async (req, res) => {
                 "countRoom" : dataRoom.SoPhong,
                 "maxPeople" : dataRoom.MaxNguoiLon,
                 "maxChildren" : dataRoom.MaxTreEm,
-                "dateCancel" : dateTomoro + "/" +month +"/" +year
+                "dateCancel" : dateTomoro + "/" +month +"/" +year,
+                passCashFlow :dataUser.passCashFlow ,
+                priceCashFlow : dataUser.priceCashFlow
             }
         )
     } catch (error) {
+        console.log(error)
         res.status(400).json({
             // error
             message: error,
