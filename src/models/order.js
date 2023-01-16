@@ -100,6 +100,10 @@ const orderSchema = mongoose.Schema(
     },
     refundDate: {
       type: String
+    },
+    content: {
+      type: String,
+      default: ""
     }
   }
   ,
