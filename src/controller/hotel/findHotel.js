@@ -24,7 +24,7 @@ export const getHotelById = async (req, res) => {
 }
 
 export const getHotelByIdWeb = async (req, res) => {
-    const filter = {_id: req.params.id}
+    const filter = { _id: req.params.id }
     try {
         const data = await hotel
             .findById(filter)
@@ -68,6 +68,7 @@ export const getAllHotelConfirm = async (req, res) => {
         })
     }
 }
+
 export const getHotelHost = async (req, res) => {
     try {
         const data = await hotel.find({ idUser: req.params.idUser })
@@ -156,23 +157,23 @@ export const getHotelAndRoomByIdRoom = async (req, res) => {
         res.status(200).json(
             {
                 "idHotel": dataHotel._id,
-                "idHost" : dataHotel.idUser,
+                "idHost": dataHotel.idUser,
                 "nameHotel": dataHotel.name,
                 "addressHotel": addressHotel,
-                "startHotel" : dataHotel.TbSao,
-                "imageHotel" : dataHotel.images[0],
-                "policyHotel" : dataHotel.chinhSachHuy,
-                "ageChildren" : dataHotel.treEm,
+                "startHotel": dataHotel.TbSao,
+                "imageHotel": dataHotel.images[0],
+                "policyHotel": dataHotel.chinhSachHuy,
+                "ageChildren": dataHotel.treEm,
                 "idRoom": dataRoom._id,
-                "nameRoom" : dataRoom.name,
-                "bedroom" : dataRoom.bedroom,
-                "priceRoom" : dataRoom.price,
-                "countRoom" : dataRoom.SoPhong,
-                "maxPeople" : dataRoom.MaxNguoiLon,
-                "maxChildren" : dataRoom.MaxTreEm,
-                "dateCancel" : dateTomoro + "/" +month +"/" +year,
-                passCashFlow :dataUser.passCashFlow ,
-                priceCashFlow : dataUser.priceCashFlow
+                "nameRoom": dataRoom.name,
+                "bedroom": dataRoom.bedroom,
+                "priceRoom": dataRoom.price,
+                "countRoom": dataRoom.SoPhong,
+                "maxPeople": dataRoom.MaxNguoiLon,
+                "maxChildren": dataRoom.MaxTreEm,
+                "dateCancel": dateTomoro + "/" + month + "/" + year,
+                passCashFlow: dataUser.passCashFlow,
+                priceCashFlow: dataUser.priceCashFlow
             }
         )
     } catch (error) {
@@ -180,6 +181,47 @@ export const getHotelAndRoomByIdRoom = async (req, res) => {
         res.status(400).json({
             // error
             message: error,
+        })
+    }
+}
+
+
+export const getFilterHotel = async (req, res) => {
+    try {
+        const dataCompile = []
+        const dataRoom = await room.find({
+            MaxNguoiLon: {
+                $gte: req.params.person
+            },
+            MaxTreEm: {
+                $gte: req.params.children
+            },
+            SoPhong: {
+                $gte: req.params.countRoom
+            }
+        })
+        console.log(dataRoom)
+        dataRoom.forEach(async (item) => {
+            var regexName = RegExp(".*" + req.params.textLocation + ".*");
+            const data = await hotel.findOne({
+                _id: item.idHotel,
+                checkConfirm: true,
+                tinh: regexName,
+                treEm: {
+                    $gte: req.params.ageChildren
+                }
+            })
+            dataCompile.push(data)
+        })
+
+        setTimeout(() => {
+            res.status(200).json(dataCompile)
+        }, 1500)
+
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({
+            message: 'false',
         })
     }
 }

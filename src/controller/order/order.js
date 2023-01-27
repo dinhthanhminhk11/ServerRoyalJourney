@@ -1582,12 +1582,30 @@ export const searchLocationAndHotel = async (req, res) => {
     ]
 
     dataLoaction.forEach(async (l) => {
-      if(l.nameHotel.includes(req.params.textLocation)){
+      if (l.nameHotel.includes(req.params.textLocation)) {
         dataCompile.push(l)
       }
     })
+
     var regex = RegExp(".*" + req.params.textLocation + ".*");
+
+    var regexName = RegExp(".*" + req.params.textLocation + ".*");
+    
     const dataHotel = await Hotel.find({ tinh: regex })
+
+    const dataHotelName = await Hotel.find({ name: regexName })
+
+    dataHotelName.forEach(async (item) => {
+      const dataRespose1 = {
+        idHotel: item._id,
+        nameHotel: item.name,
+        imageHotel: item.images[0],
+        address: item.tinh + ", " + item.huyen + ", " + item.xa + ", " + item.sonha,
+        type: 2
+      }
+      dataCompile.push(dataRespose1)
+    })
+
     dataHotel.forEach(async (item) => {
       const dataRespose = {
         idHotel: item._id,

@@ -6,7 +6,7 @@ import {
     getAllHotelConfirm,
     getHotelById,
     getHotelHost,
-    getHotelAndRoomByIdRoom, getHotelByIdHost, getHotelByIdWeb
+    getHotelAndRoomByIdRoom, getHotelByIdHost, getHotelByIdWeb,getFilterHotel
 } from "../controller/hotel/findHotel";
 import {confirmHotel, updateHotel, updateSaoHotel} from "../controller/hotel/updateHotel";
 import {nearByUserLocation} from "../controller/hotel/userLocationNearByHotel";
@@ -31,5 +31,5 @@ router.post('/updateHotel', updateHotel)
 router.get('/getHotelAndRoomByIdRoom/:id/:idUser', getHotelAndRoomByIdRoom)
 
 router.get('/confirmHotel/:id&:checkConfirm', confirmHotel)
-
+router.get('/getFilterHotel/:textLocation&:ageChildren&:person&:children&:countRoom', getFilterHotel)
 export default router
