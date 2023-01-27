@@ -35,7 +35,8 @@ import {
   listProductAccessByUserId,
   getHouseResponseByServer,
   getBillById,
-  listBillByUserId, getAllOrderById,getDataCancelBooking
+  listBillByUserId, getAllOrderById,getDataCancelBooking,
+  searchLocationAndHotel
 } from '../controller/order/order'
 const router = Router()
 router.route('/addorder').post(createOrder)
@@ -84,6 +85,7 @@ router.route('/listBillByUserId/:id').get(listBillByUserId)
 router.get('/getAllOrderById/:idHost', getAllOrderById)
 router.get('/getDataCancelBooking/:id', getDataCancelBooking)
 
+router.get('/searchLocationAndHotel/:textLocation', searchLocationAndHotel)
 // bill
 
 export default router

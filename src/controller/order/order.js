@@ -1423,7 +1423,7 @@ export const getBillById = async (req, res) => {
     )
     const dataRoom = await room.findById({ _id: dataBill.idRoom })
     const dataHotel = await hotel.findById({ _id: dataBill.idHotel })
-    const dataHost =  await User.findById({ _id: dataBill.idHost })
+    const dataHost = await User.findById({ _id: dataBill.idHost })
     res.status(200).json({
       idHotel: dataHotel._id,
       nameHost: dataHost.name,
@@ -1548,6 +1548,60 @@ export const getDataCancelBooking = async (req, res) => {
       dataCancelByUser: dataBill.refundDate
     })
   } catch (error) {
+    res.status(401).json({
+      messege: false,
+    })
+  }
+}
+
+export const searchLocationAndHotel = async (req, res) => {
+  try {
+    const dataCompile = []
+
+    const dataLoaction = [
+      {
+        nameHotel: "Hà Nội",
+        address: "Địa điểm",
+        type: 1
+      },
+      {
+        nameHotel: "Hải dương",
+        address: "Địa điểm",
+        type: 1
+      },
+      {
+        nameHotel: "Nam Định",
+        address: "Địa điểm",
+        type: 1
+      },
+      {
+        nameHotel: "Hà Giang",
+        address: "Địa điểm",
+        type: 1
+      },
+    ]
+
+    dataLoaction.forEach(async (l) => {
+      if(l.nameHotel.includes(req.params.textLocation)){
+        dataCompile.push(l)
+      }
+    })
+    var regex = RegExp(".*" + req.params.textLocation + ".*");
+    const dataHotel = await Hotel.find({ tinh: regex })
+    dataHotel.forEach(async (item) => {
+      const dataRespose = {
+        idHotel: item._id,
+        nameHotel: item.name,
+        imageHotel: item.images[0],
+        address: item.tinh + ", " + item.huyen + ", " + item.xa + ", " + item.sonha,
+        type: 2
+      }
+      dataCompile.push(dataRespose)
+    })
+
+    res.status(200).json(dataCompile)
+  } catch (error) {
+    console.log(error)
     res.status(401).json({
       messege: false,
     })

@@ -31,4 +31,5 @@ router.post('/updateHotel', updateHotel)
 router.get('/getHotelAndRoomByIdRoom/:id/:idUser', getHotelAndRoomByIdRoom)
 
 router.get('/confirmHotel/:id&:checkConfirm', confirmHotel)
+
 export default router
