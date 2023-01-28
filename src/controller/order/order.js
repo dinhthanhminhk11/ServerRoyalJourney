@@ -1383,8 +1383,6 @@ export const listNotibyUserIdNotSeem = async (req, res) => {
 export const listProductAccessByUserId = async (req, res) => {
   try {
     const data = await order.find({ IdUser: req.params.id, checkedOut: true })
-
-
     res.status(200).json({
       messege: true,
       data: data
@@ -1590,7 +1588,7 @@ export const searchLocationAndHotel = async (req, res) => {
     var regex = RegExp(".*" + req.params.textLocation + ".*");
 
     var regexName = RegExp(".*" + req.params.textLocation + ".*");
-    
+
     const dataHotel = await Hotel.find({ tinh: regex })
 
     const dataHotelName = await Hotel.find({ name: regexName })

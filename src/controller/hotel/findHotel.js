@@ -191,16 +191,21 @@ export const getFilterHotel = async (req, res) => {
         const dataCompile = []
         const dataRoom = await room.find({
             MaxNguoiLon: {
-                $gte: req.params.person
+                $gte: parseInt(req.params.person)
             },
             MaxTreEm: {
-                $gte: req.params.children
+                $gte: parseInt(req.params.children)
             },
-            SoPhong: {
-                $gte: req.params.countRoom
-            }
+            SoPhong: { $gte: req.params.countRoom }
         })
+
         console.log(dataRoom)
+        console.log(dataRoom.length + " size")
+
+        console.log(req.params.ageChildren + " ageChildren")
+        console.log(req.params.person + " person")
+        console.log(req.params.children + " children")
+        console.log(req.params.countRoom + " countRoom")
         dataRoom.forEach(async (item) => {
             var regexName = RegExp(".*" + req.params.textLocation + ".*");
             const data = await hotel.findOne({
@@ -211,12 +216,15 @@ export const getFilterHotel = async (req, res) => {
                     $gte: req.params.ageChildren
                 }
             })
-            dataCompile.push(data)
+            if (data != null) {
+                console.log(data._id + " id")
+                dataCompile.push(data)
+            }
         })
-
         setTimeout(() => {
-            res.status(200).json(dataCompile)
-        }, 1500)
+            const data = Array.from(new Set(dataCompile.map(JSON.stringify))).map(JSON.parse);
+            res.status(200).json(data)
+        }, 1000)
 
     } catch (error) {
         console.log(error)
