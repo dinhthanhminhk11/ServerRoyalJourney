@@ -1623,3 +1623,40 @@ export const searchLocationAndHotel = async (req, res) => {
     })
   }
 }
+
+
+export const getAllOrder = async (req, res) => {
+  try {
+    const dataSuccess = []
+    const data = await order.find({})
+    data.forEach(async (item) => {
+      const dataRoom = await room.findById({ _id: item.idRoom })
+      const dataHotel = await Hotel.findById({ _id: item.idHotel })
+      const dataUser = await User.findById({ _id: item.idUser })
+      const dataHost = await User.findById({ _id: item.idHost})
+      const result = {
+        _id: item._id,
+        data: item,
+        nameUser: dataUser.name,
+        nameHost: dataHost.name,
+        emailHost: dataHost.email,
+        emailUser: dataUser.email,
+        namePhong: dataRoom.name,
+        nameHotel: dataHotel.name,
+        status: item.status,
+        seem: item.seem,
+        isCancellationDate: item.isCancellationDate
+      }
+      dataSuccess.push(result)
+    })
+
+    setTimeout(() => {
+      res.status(200).json(dataSuccess.reverse())
+    }, 1500)
+
+  } catch (error) {
+    res.status(401).json({
+      messege: false,
+    })
+  }
+}

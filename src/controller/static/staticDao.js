@@ -49,9 +49,35 @@ export const totalOrder = async (req, res) => {
         })
     }
 }
+
+export const totalAllOrder = async (req, res) => {
+    try {
+        const data = await order.count({})
+        res.json({
+            data
+        })
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
 export const totalOrderFinish = async (req, res) => {
     try {
         const data = await order.count({idHost: req.params.idHost, status: 'Đã trả phòng'})
+        res.json({
+            data
+        })
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
+
+export const totalAllOrderFinish = async (req, res) => {
+    try {
+        const data = await order.count({status: 'Đã trả phòng'})
         res.json({
             data
         })
@@ -65,6 +91,20 @@ export const totalOrderProcess = async (req, res) => {
     try {
         const data = await order.count({
             idHost: req.params.idHost,
+            status: {$in: ['Đang chờ', 'Đã xác nhận']}
+        })
+        res.json({
+            data
+        })
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
+export const totalAllOrderProcess = async (req, res) => {
+    try {
+        const data = await order.count({
             status: {$in: ['Đang chờ', 'Đã xác nhận']}
         })
         res.json({
@@ -91,10 +131,46 @@ export const totalOrderFail = async (req, res) => {
         })
     }
 }
+
+export const totalAllOrderFail = async (req, res) => {
+    try {
+        const data = await order.count({
+            status: {$in: ['Chủ đã huỷ', 'Khách huỷ']}
+        })
+        res.json({
+            data
+        })
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
+
 export const getCountTimeOrder = async (req, res) => {
     try {
         const data = await order.find({
             idHost: req.params.idHost,
+            createdAt:
+                {
+                    $gte: a,
+                    $lt: b
+                }
+        }).count()
+        res.json({
+            data
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
+
+export const getCountAllTimeOrder = async (req, res) => {
+    try {
+        const data = await order.find({
             createdAt:
                 {
                     $gte: a,
@@ -119,6 +195,21 @@ export const getPriceDayOrder = async (req, res) => {
             status: 'Đã trả phòng',
             createdAt: {$gte: a, $lt: b}
         },{priceEnterprise:1})
+        res.json({
+            data
+        })
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
+
+export const getCountPriceAdmin = async (req, res) => {
+    try {
+        const data = await order.find({
+            status: 'Đã trả phòng',
+        },{priceAdmin:1})
         res.json({
             data
         })
@@ -225,6 +316,28 @@ export const getPriceOrder= async (req, res) => {
     }
 }
 
+export const getPriceAdminOrder= async (req, res) => {
+    try {
+        let startDate= new Date(req.params.startDay)
+        startDate.setUTCHours(0,0,0,0)
+        let endDate= new Date(req.params.endDay)
+        endDate.setUTCHours(23,59,59,999)
+        const data = await order.find({
+            status: 'Đã trả phòng',
+            createdAt: {$gte: Date.parse(startDate), $lt: Date.parse(endDate)}
+        },{
+            priceAdmin:1})
+        res.json({
+            data
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
+
 export const getPriceOrderWaiting= async (req, res) => {
     try {
         const data = await order.find({
@@ -241,3 +354,20 @@ export const getPriceOrderWaiting= async (req, res) => {
         })
     }
 }
+
+export const getPriceAdminWaiting= async (req, res) => {
+    try {
+        const data = await order.find({
+            status: 'Đang chờ',
+        },{priceAdmin:1})
+        res.json({
+            data
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            error
+        })
+    }
+}
+

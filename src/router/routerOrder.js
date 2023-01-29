@@ -35,8 +35,8 @@ import {
   listProductAccessByUserId,
   getHouseResponseByServer,
   getBillById,
-  listBillByUserId, getAllOrderById,getDataCancelBooking,
-  searchLocationAndHotel
+  listBillByUserId, getAllOrderById, getDataCancelBooking,
+  searchLocationAndHotel, getAllOrder
 } from '../controller/order/order'
 const router = Router()
 router.route('/addorder').post(createOrder)
@@ -83,6 +83,7 @@ router.route('/listBillByUserId/:id').get(listBillByUserId)
 
 
 router.get('/getAllOrderById/:idHost', getAllOrderById)
+router.get('/getAllOrder', getAllOrder)
 router.get('/getDataCancelBooking/:id', getDataCancelBooking)
 
 router.get('/searchLocationAndHotel/:textLocation', searchLocationAndHotel)
