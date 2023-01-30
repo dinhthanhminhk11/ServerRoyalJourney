@@ -6,10 +6,10 @@ import {
     getAllHotelConfirm,
     getHotelById,
     getHotelHost,
-    getHotelAndRoomByIdRoom, getHotelByIdHost, getHotelByIdWeb,getFilterHotel
+    getHotelAndRoomByIdRoom, getHotelByIdHost, getHotelByIdWeb,getFilterHotel,getFilterHotelAndStarAndPrice
 } from "../controller/hotel/findHotel";
 import {confirmHotel, updateHotel, updateSaoHotel} from "../controller/hotel/updateHotel";
-import {nearByUserLocation} from "../controller/hotel/userLocationNearByHotel";
+import {nearByUserLocation , nearByUserLocationAndFilter ,nearByUserLocationAndFilterAndPriceAndStar} from "../controller/hotel/userLocationNearByHotel";
 
 const router = Router()
 // router.route('/listProduct').get(getProducts)
@@ -32,4 +32,13 @@ router.get('/getHotelAndRoomByIdRoom/:id/:idUser', getHotelAndRoomByIdRoom)
 
 router.get('/confirmHotel/:id&:checkConfirm', confirmHotel)
 router.get('/getFilterHotel/textLocation=:textLocation&ageChildren=:ageChildren&person=:person&children=:children&countRoom=:countRoom', getFilterHotel)
+
+
+
+router.post('/nearByUserLocationAndFilter/ageChildren=:ageChildren&person=:person&children=:children&countRoom=:countRoom', nearByUserLocationAndFilter)
+
+router.post('/nearByUserLocationAndFilterAndPriceAndStar/ageChildren=:ageChildren&person=:person&children=:children&countRoom=:countRoom&startPrice=:startPrice&endPrice=:endPrice&TbSao=:TbSao', nearByUserLocationAndFilterAndPriceAndStar)
+
+
+router.get('/getFilterHotelAndStarAndPrice/textLocation=:textLocation&ageChildren=:ageChildren&person=:person&children=:children&countRoom=:countRoom&startPrice=:startPrice&endPrice=:endPrice&TbSao=:TbSao', getFilterHotelAndStarAndPrice)
 export default router

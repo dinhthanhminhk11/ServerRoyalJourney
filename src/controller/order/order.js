@@ -1383,11 +1383,21 @@ export const listNotibyUserIdNotSeem = async (req, res) => {
 export const listProductAccessByUserId = async (req, res) => {
   try {
     const data = await order.find({ IdUser: req.params.id, checkedOut: true })
+
+    var result = data.reduce((unique, o) => {
+      if(!unique.some(obj => obj.idHotel === o.idHotel && obj.idHost === o.idHost)) {
+        unique.push(o);
+      }
+      return unique;
+  },[]);
+
+  console.log(result)
     res.status(200).json({
       messege: true,
-      data: data
+      data: result
     })
   } catch (error) {
+    console.log(error)
     res.status(404).json({
       messege: false,
     })
@@ -1557,26 +1567,69 @@ export const searchLocationAndHotel = async (req, res) => {
     const dataCompile = []
 
     const dataLoaction = [
-      {
-        nameHotel: "Hà Nội",
-        address: "Địa điểm",
-        type: 1
-      },
-      {
-        nameHotel: "Hải dương",
-        address: "Địa điểm",
-        type: 1
-      },
-      {
-        nameHotel: "Nam Định",
-        address: "Địa điểm",
-        type: 1
-      },
-      {
-        nameHotel: "Hà Giang",
-        address: "Địa điểm",
-        type: 1
-      },
+      { nameHotel: "An Giang", address: "Địa điểm", type: 1 },
+      { nameHotel: "Bà Rịa - Vũng Tàu", address: "Địa điểm", type: 1 },
+      { nameHotel: "Bạc Liêu", address: "Địa điểm", type: 1 },
+      { nameHotel: "Bắc Giang", address: "Địa điểm", type: 1 },
+      { nameHotel: "Bắc Kạn", address: "Địa điểm", type: 1 },
+      { nameHotel: "Bắc Ninh", address: "Địa điểm", type: 1 },
+      { nameHotel: "Bến Tre", address: "Địa điểm", type: 1 },
+      { nameHotel: "Bình Dương", address: "Địa điểm", type: 1 },
+      { nameHotel: "Bình Định", address: "Địa điểm", type: 1 },
+      { nameHotel: "Bình Phước", address: "Địa điểm", type: 1 },
+      { nameHotel: "Bình Thuận", address: "Địa điểm", type: 1 },
+      { nameHotel: "Cà Mau", address: "Địa điểm", type: 1 },
+      { nameHotel: "Cao Bằng", address: "Địa điểm", type: 1 },
+      { nameHotel: "Cần Thơ", address: "Địa điểm", type: 1 },
+      { nameHotel: "Đà Nẵng", address: "Địa điểm", type: 1 },
+      { nameHotel: "Đắk Lắk", address: "Địa điểm", type: 1 },
+      { nameHotel: "Đắk Nông", address: "Địa điểm", type: 1 },
+      { nameHotel: "Điện Biên", address: "Địa điểm", type: 1 },
+      { nameHotel: "Đồng Nai", address: "Địa điểm", type: 1 },
+      { nameHotel: "Đồng Tháp", address: "Địa điểm", type: 1 },
+      { nameHotel: "Gia Lai", address: "Địa điểm", type: 1 },
+      { nameHotel: "Hà Giang", address: "Địa điểm", type: 1 },
+      { nameHotel: "Hà Nam", address: "Địa điểm", type: 1 },
+      { nameHotel: "Hà Nội", address: "Địa điểm", type: 1 },
+      { nameHotel: "Hà Tĩnh", address: "Địa điểm", type: 1 },
+      { nameHotel: "Hải Dương", address: "Địa điểm", type: 1 },
+      { nameHotel: "Hải Phòng", address: "Địa điểm", type: 1 },
+      { nameHotel: "Hậu Giang", address: "Địa điểm", type: 1 },
+      { nameHotel: "Hòa Bình", address: "Địa điểm", type: 1 },
+      { nameHotel: "Thành phố Hồ Chí Minh", address: "Địa điểm", type: 1 },
+      { nameHotel: "Hưng Yên", address: "Địa điểm", type: 1 },
+      { nameHotel: "Khánh Hòa", address: "Địa điểm", type: 1 },
+      { nameHotel: "Kiên Giang", address: "Địa điểm", type: 1 },
+      { nameHotel: "Kon Tum", address: "Địa điểm", type: 1 },
+      { nameHotel: "Lai Châu", address: "Địa điểm", type: 1 },
+      { nameHotel: "Lạng Sơn", address: "Địa điểm", type: 1 },
+      { nameHotel: "Lào Cai", address: "Địa điểm", type: 1 },
+      { nameHotel: "Lâm Đồng", address: "Địa điểm", type: 1 },
+      { nameHotel: "Long An", address: "Địa điểm", type: 1 },
+      { nameHotel: "Nam Định", address: "Địa điểm", type: 1 },
+      { nameHotel: "Nghệ An", address: "Địa điểm", type: 1 },
+      { nameHotel: "Ninh Bình", address: "Địa điểm", type: 1 },
+      { nameHotel: "Ninh Thuận", address: "Địa điểm", type: 1 },
+      { nameHotel: "Phú Thọ", address: "Địa điểm", type: 1 },
+      { nameHotel: "Phú Yên", address: "Địa điểm", type: 1 },
+      { nameHotel: "Quảng Bình", address: "Địa điểm", type: 1 },
+      { nameHotel: "Quảng Nam", address: "Địa điểm", type: 1 },
+      { nameHotel: "Quảng Ngãi", address: "Địa điểm", type: 1 },
+      { nameHotel: "Quảng Ninh", address: "Địa điểm", type: 1 },
+      { nameHotel: "Quảng Trị", address: "Địa điểm", type: 1 },
+      { nameHotel: "Sóc Trăng", address: "Địa điểm", type: 1 },
+      { nameHotel: "Sơn La", address: "Địa điểm", type: 1 },
+      { nameHotel: "Tây Ninh", address: "Địa điểm", type: 1 },
+      { nameHotel: "Thái Bình", address: "Địa điểm", type: 1 },
+      { nameHotel: "Thái Nguyên", address: "Địa điểm", type: 1 },
+      { nameHotel: "Thanh Hóa", address: "Địa điểm", type: 1 },
+      { nameHotel: "Thừa Thiên Huế", address: "Địa điểm", type: 1 },
+      { nameHotel: "Tiền Giang", address: "Địa điểm", type: 1 },
+      { nameHotel: "Trà Vinh", address: "Địa điểm", type: 1 },
+      { nameHotel: "Tuyên Quang", address: "Địa điểm", type: 1 },
+      { nameHotel: "Vĩnh Long", address: "Địa điểm", type: 1 },
+      { nameHotel: "Vĩnh Phúc", address: "Địa điểm", type: 1 },
+      { nameHotel: "Yên Bái", address: "Địa điểm", type: 1 },
     ]
 
     dataLoaction.forEach(async (l) => {
@@ -1633,7 +1686,7 @@ export const getAllOrder = async (req, res) => {
       const dataRoom = await room.findById({ _id: item.idRoom })
       const dataHotel = await Hotel.findById({ _id: item.idHotel })
       const dataUser = await User.findById({ _id: item.idUser })
-      const dataHost = await User.findById({ _id: item.idHost})
+      const dataHost = await User.findById({ _id: item.idHost })
       const result = {
         _id: item._id,
         data: item,

@@ -234,4 +234,60 @@ export const getFilterHotel = async (req, res) => {
     }
 }
 
+export const getFilterHotelAndStarAndPrice = async (req, res) => {
+    try {
+        const dataCompile = []
+        const dataRoom = await room.find({
+            MaxNguoiLon: {
+                $gte: parseInt(req.params.person)
+            },
+            MaxTreEm: {
+                $gte: parseInt(req.params.children)
+            },
+            SoPhong: { $gte: req.params.countRoom},
+            price: {
+                $gte: Number(req.params.startPrice) + 1,
+                $lt: Number(req.params.endPrice) + 1
+            }
+        })
+
+        console.log(dataRoom)
+        console.log(dataRoom.length + " size")
+
+        console.log(req.params.ageChildren + " ageChildren")
+        console.log(req.params.person + " person")
+        console.log(req.params.children + " children")
+        console.log(req.params.countRoom + " countRoom")
+        dataRoom.forEach(async (item) => {
+            var regexName = RegExp(".*" + req.params.textLocation + ".*");
+            const data = await hotel.findOne({
+                _id: item.idHotel,
+                checkConfirm: true,
+                tinh: regexName,
+                treEm: {
+                    $gte: req.params.ageChildren
+                },
+                TbSao: {
+                    $lte: Number(req.params.TbSao),
+                    // $lt: 6
+                },
+            })
+            if (data != null) {
+                console.log(data._id + " id")
+                dataCompile.push(data)
+            }
+        })
+        setTimeout(() => {
+            const data = Array.from(new Set(dataCompile.map(JSON.stringify))).map(JSON.parse);
+            res.status(200).json(data)
+        }, 1000)
+
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({
+            message: 'false',
+        })
+    }
+}
+
 
