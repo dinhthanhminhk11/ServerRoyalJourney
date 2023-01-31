@@ -1,7 +1,5 @@
-import user from '../../models/user'
-import product from '../../models/product'
+
 import bookmark from '../../models/bookmark'
-import e from 'express'
 
 export const createBookmark = async (req, res) => {
     try {
