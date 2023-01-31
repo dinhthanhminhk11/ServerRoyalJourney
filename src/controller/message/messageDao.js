@@ -1,4 +1,4 @@
-import Message from "../../models/Message"
+import Message from "../../models/message"
 import user from "../../models/user";
 import send from "send";
 
