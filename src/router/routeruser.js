@@ -2,7 +2,14 @@ import { Router } from 'express'
 import { loginUser, loginHost, loginAdmin , isModerator  , verifyToken} from '../controller/user/signIn'
 import { createHost, createUser , verifyEmail , sendAgain , checkEmailForgot , validateUserPass , newPass , updateCheckTokenDevice , updateInfoUser,updatePassword,getCash ,getPassPin ,createPinPass} from '../controller/user/signUp'
 import { nearByUserLocation,nearByUserLocationAllCategory , moderatorBoard  } from '../controller/product/userLocationNearBy'
-import {getAllHostUser, getCountHotelByUser} from "../controller/user/findUser";
+import {
+    getAllHostUser,
+    getAllUser,
+    getCountHotelByUser,
+    LockAccountUser, UnLockAccountUser,
+    updateCheckAccount
+} from "../controller/user/findUser";
+import {confirmHotel} from "../controller/hotel/updateHotel";
 const router = Router()
 router.route('/signup').post(createUser)
 router.route('/signin').post(loginUser)
@@ -32,4 +39,7 @@ router.route('/createPinPass').post(createPinPass)
 
 router.get('/getAllHost', getAllHostUser)
 router.get('/getCountHotelById/:idUser',getCountHotelByUser)
+router.get('/getAllUser', getAllUser)
+router.get('/lockAccountUser/:id&:reason', LockAccountUser)
+router.get('/unLockAccountUser/:id', UnLockAccountUser)
 export default router

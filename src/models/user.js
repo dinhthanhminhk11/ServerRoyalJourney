@@ -32,6 +32,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  checkAccount: {
+    type: Boolean,
+    default: true
+  },
+  reason: {
+    type: String,
+    default: ""
+  },
   active: {
     type: Boolean,
     default: false,
