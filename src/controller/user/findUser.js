@@ -41,11 +41,7 @@ export const getCountHotelByUser = async (req, res) => {
 export const getAllUser = async (req, res) => {
     try {
         const data = await user.find({role: 0})
-        res.status(200).json(
-            {
-                data: data,
-            }
-        )
+        res.status(200).json(data)
 
     } catch (error) {
         res.status(400).json({
