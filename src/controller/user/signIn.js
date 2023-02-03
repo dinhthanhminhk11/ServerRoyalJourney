@@ -6,7 +6,7 @@ var jwt = require("jsonwebtoken");
 export const loginUser = async (req, res) => {
   try {
     const checkEmail = await user.findOne({ email: req.body.email, role: 0 })
-   
+
     if (!checkEmail) return res.status(200).json(
       {
         status: 'false',
@@ -33,12 +33,13 @@ export const loginUser = async (req, res) => {
         image: checkEmail.image,
         phone: checkEmail.phone,
         address: checkEmail.address,
-        active : checkEmail.active,
+        active: checkEmail.active,
         countBooking: checkEmail.countBooking,
-        tokenDevice: checkEmail.tokenDevice
+        tokenDevice: checkEmail.tokenDevice,
+        checkAccount : checkEmail.checkAccount
       },
-      "accessToken" : token, 
-      
+      "accessToken": token,
+
     })
   } catch (error) {
     res.status(401).json({
@@ -99,9 +100,10 @@ export const isModerator = async (req, res, next) => {
       phone: checkEmail.phone,
       address: checkEmail.address,
       countBooking: checkEmail.countBooking,
-      tokenDevice: checkEmail.tokenDevice
+      tokenDevice: checkEmail.tokenDevice,
+      checkAccount : checkEmail.checkAccount
     },
-    "accessToken" : "token", 
+    "accessToken": "token",
   })
 }
 

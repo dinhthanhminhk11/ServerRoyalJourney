@@ -434,6 +434,14 @@ export const updateOrderById = async (req, res) => {
       },
       { new: true }
     )
+    const dataUser = await user.findById({ _id: dataUpdate.idUser })
+    
+    const dataUser1 = await user.findOneAndUpdate(
+      { _id: dataUpdate.idUser },
+      { countBooking: dataUser.countBooking -= 1 },
+      { new: true }
+    )
+
     res.status(200).json({
       messege: true,
       data: dataUpdate,
