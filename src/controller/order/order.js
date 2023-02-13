@@ -12,7 +12,7 @@ const { sendMailComfirmBooking } = require('../../services/MAIL');
 const { sendMailCheckOut, sendMailComfirmCancelByUser, sendMailComfirmCancelByHost } = require('../../services/MAIL');
 var FCM = require('fcm-node')
 
-const Server_key = 'AAAAXdg_118:APA91bEVZLvJ2g1mgi--7RqdkknlLqy9g-9VpsoAY2Ve8n9xd2tyMV2Ag-4V-OA6fPnTYZFXGur3nMd-qX7xdN2ryE0n4KvnngC-eUw7hsUMZQf6uWWNeIUN_v2cIDE64Pk_Hv88n7I6'
+const Server_key = 'AAAAyaKJMVk:APA91bFLcFG-nvzQBQ8BUAxFxAqUBGl6Zi4OkNGWZSEnEjAkgSei_M9MRX5j-ztjf7pNRujg2NiQl08VD5LEYnlQH5vgYTdN84e8EXa0UrEu0m9bvMtirh2DpPtNVqYoFJG3TXwJVN0C'
 
 var fcm = new FCM(Server_key);
 
@@ -435,7 +435,7 @@ export const updateOrderById = async (req, res) => {
       { new: true }
     )
     const dataUser = await user.findById({ _id: dataUpdate.idUser })
-    
+
     const dataUser1 = await user.findOneAndUpdate(
       { _id: dataUpdate.idUser },
       { countBooking: dataUser.countBooking -= 1 },
@@ -744,6 +744,7 @@ export const deleteOrderById = async (req, res) => {
       data: data,
     })
   } catch (error) {
+    console.log(error)
     res.status(401).json({
       messege: false
     })
@@ -752,7 +753,9 @@ export const deleteOrderById = async (req, res) => {
 export const sendNotification = async (req, res) => {
   try {
     var message = {
-      to: 'd0uw1UO0RCGCMbteSM-SZs:APA91bHzunneO25hFcpKIJZH_GNRCW1Bdvth5HbAxUOP7hdkYo9Gh7jI0YfLm8YDSLJToOmQ-nNITGLHgHmHA9tFD30cvvKUIUa9sGnrrOPVDd9OQ4bh9KLm-a630SyCk436Bu2xYNQK',
+      // to : 'fj-bOCxLQgaxusiLHSa-8x:APA91bFf8uDgTcbcs9i_c42ns-QoRXFT6Hv0llZGhXu3Hm_tkUoTj2t0wpnP844mo2kbTtho9UqNppgBBe5ZqJ8uDm_2XSrKBSxNRH5R3m4ShvnN6z_voIWx9Vh5Qic1iX0VWE8eCVfM',
+      registration_ids: ['fj-bOCxLQgaxusiLHSa-8x:APA91bFf8uDgTcbcs9i_c42ns-QoRXFT6Hv0llZGhXu3Hm_tkUoTj2t0wpnP844mo2kbTtho9UqNppgBBe5ZqJ8uDm_2XSrKBSxNRH5R3m4ShvnN6z_voIWx9Vh5Qic1iX0VWE8eCVfM'
+      ],
       data: { //you can send only notification or only data(or include both)
         title: 'Xác nhận phòng',
         body: 'Cảm ơn bạn đã sửa dụng dịch vụ của chúng tôi',
@@ -760,7 +763,12 @@ export const sendNotification = async (req, res) => {
         image: "https://danviet.mediacdn.vn/2021/1/6/13197933916907312977860828685791406656205212o-16099346980101815349486.jpg"
       },
       android: {
-        "priority": "normal"
+        "priority": "high"
+      },
+      apns: {
+        "headers":{
+          "apns-priority":"5"
+        }
       }
     };
 
@@ -1393,13 +1401,13 @@ export const listProductAccessByUserId = async (req, res) => {
     const data = await order.find({ IdUser: req.params.id, checkedOut: true })
 
     var result = data.reduce((unique, o) => {
-      if(!unique.some(obj => obj.idHotel === o.idHotel && obj.idHost === o.idHost)) {
+      if (!unique.some(obj => obj.idHotel === o.idHotel && obj.idHost === o.idHost)) {
         unique.push(o);
       }
       return unique;
-  },[]);
+    }, []);
 
-  console.log(result)
+    console.log(result)
     res.status(200).json({
       messege: true,
       data: result
